@@ -146,6 +146,27 @@ pre.bib{
 .bibwrap{position:relative; max-width:820px}
 .copy{position:absolute; top:.6rem; right:.6rem; font-size:.85rem; padding:.35rem .8rem}
 
+
+/* ---------- Playground ---------- */
+.play{display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:2rem 2.5rem; margin-top:1.5rem; align-items:start}
+@media (max-width:860px){ .play{grid-template-columns:1fr} }
+.sliders{display:flex; flex-direction:column; gap:1rem}
+.sl label{display:flex; justify-content:space-between; gap:1rem; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem}
+.sl output{font-variant-numeric:tabular-nums; color:var(--accent); font-weight:600}
+.sl input[type=range]{width:100%; accent-color:var(--accent); margin:.35rem 0 0}
+.sl small{display:block; color:var(--muted); font-size:.82rem; line-height:1.35}
+.group{font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:1rem; font-weight:600; margin:.6rem 0 -.3rem; color:var(--vein)}
+.plots{display:flex; flex-direction:column; gap:1.25rem; min-width:0}
+.plot{background:var(--surface); border-radius:16px; padding:1rem 1rem .8rem}
+.plot h3{margin:0 0 .5rem; font-size:1.02rem}
+.plot canvas{width:100%; height:220px; display:block}
+.readout{display:flex; flex-wrap:wrap; gap:.4rem 1.5rem; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem; margin:0}
+.readout span{color:var(--muted)} .readout b{font-weight:600}
+.warn{color:var(--accent); font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem; min-height:1.3em; margin:0}
+.legend{display:flex; gap:1.2rem; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.85rem; color:var(--muted); margin:.4rem 0 0}
+.legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:.35rem; border-radius:2px}
+.playbtns{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center}
+
 footer{margin:5rem 0 0; padding:2rem 0 3rem; border-top:1px solid var(--line); font-size:.92rem; color:var(--muted)}
 footer p{max-width:var(--measure)}
 </style>
@@ -170,6 +191,7 @@ footer p{max-width:var(--measure)}
   <div class="actions">
     <a class="btn primary" href="https://www.nature.com/articles/s41467-025-65149-5">Read the paper</a>
     <a class="btn" href="https://www.nature.com/articles/s41467-025-65149-5.pdf">Download PDF</a>
+    <a class="btn" href="#playground">Try the model</a>
     <a class="btn" href="https://doi.org/10.24433/CO.7145974.v1">Code (Code Ocean)</a>
     <a class="btn" href="https://doi.org/10.6084/m9.figshare.30025519">Species data (Figshare)</a>
   </div>
@@ -302,6 +324,50 @@ footer p{max-width:var(--measure)}
       <figcaption>Fig. 7. Experimental and model spectrograms for six species.</figcaption>
     </figure>
   </article>
+</section>
+
+
+<section id="playground">
+  <div class="prose">
+    <h2>Play with the model</h2>
+    <p>
+      This panel solves the discrete tymbal–resonator chain from the paper (Eqs. 1–2) live in your browser, with 40 unit cells.
+      The first cell receives the muscle pull, then the model runs freely. The sound you hear comes straight from the simulation.
+      It is the summed acceleration of the ribs plus the resonator chain, repeated at the muscle firing rate.
+      Change a parameter and press play again to hear the difference.
+    </p>
+  </div>
+
+  <div class="play">
+    <div class="sliders" id="sliders"></div>
+
+    <div class="plots">
+      <div class="playbtns">
+        <button class="btn primary" id="pl-play" type="button">Play the call</button>
+        <label class="toggle"><input type="checkbox" id="pl-body" checked> Include body resonator in the sound</label>
+        <button class="btn" id="pl-reset" type="button">Reset parameters</button>
+      </div>
+      <p class="warn" id="pl-warn" role="status"></p>
+
+      <div class="plot">
+        <h3>Rib displacement along the chain over time</h3>
+        <canvas id="pl-st" aria-label="Space-time map of rib displacement. Horizontal axis is time, vertical axis is position along the tymbal."></canvas>
+        <div class="legend"><span><i style="background:var(--accent)"></i>buckled</span><span><i style="background:var(--line)"></i>at rest</span><span>Posterior end at top, anterior at bottom</span></div>
+      </div>
+
+      <div class="plot">
+        <h3>Spectrum of one click sequence</h3>
+        <canvas id="pl-sp" aria-label="Frequency spectrum of the simulated sound."></canvas>
+        <div class="legend"><span><i style="background:var(--muted)"></i>tymbal only</span><span><i style="background:var(--accent)"></i>tymbal + body (radiated)</span></div>
+      </div>
+
+      <p class="readout" id="pl-read"></p>
+      <p class="caption" style="margin:0">
+        Model time is scaled so the tymbal's own band lands near 4–5 kHz, as measured in <em>N. canicularis</em>. Absolute pitch is therefore
+        illustrative, but shifts caused by the parameters are real outputs of the equations.
+      </p>
+    </div>
+  </div>
 </section>
 
 <section id="why">
@@ -500,6 +566,170 @@ footer p{max-width:var(--measure)}
     catch(e){ g("copybib").textContent = "Select and copy"; }
     setTimeout(()=> g("copybib").textContent = "Copy BibTeX", 1800);
   });
+})();
+</script>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const P = [
+    {g:"Tymbal (bistable chain)"},
+    {k:"R1", n:"Rib-to-rib coupling, R̃₁", min:2, max:40, st:.5, v:15, d:"Stiffer coupling lets the snap travel further and faster."},
+    {k:"l1", n:"Truss stiffness, λ₁", min:0, max:.3, st:.01, v:.10, d:"Above 0.25 the ribs lose their second stable state."},
+    {k:"z",  n:"Damping, ζ", min:0, max:.5, st:.01, v:.05, d:"Viscoelastic loss in the membrane."},
+    {g:"Body (resonator chain)"},
+    {k:"l2", n:"Tymbal–body coupling, λ₂", min:0, max:.8, st:.01, v:.30, d:"How strongly the body is driven by the ribs."},
+    {k:"M",  n:"Resonator parameter, M", min:.2, max:12, st:.1, v:6.5, d:"Sets the body's resonance, and so its filtering band."},
+    {k:"R2", n:"Coupling along the body, R̃₂", min:0, max:30, st:.5, v:4, d:"Spreads energy along the resonator chain."},
+    {g:"Muscle"},
+    {k:"U0", n:"Muscle pull on first rib, U₀", min:1, max:8, st:.1, v:5, d:"Too weak and the buckling wave never starts."},
+    {k:"rate", n:"Firing rate (Hz)", min:20, max:200, st:5, v:60, d:"How often the click sequence repeats in the call."}
+  ];
+  const box = $("sliders"), inputs = {};
+  P.forEach(p=>{
+    if (p.g){ const h=document.createElement("p"); h.className="group"; h.textContent=p.g; box.appendChild(h); return; }
+    const w=document.createElement("div"); w.className="sl";
+    w.innerHTML = `<label for="pl-${p.k}">${p.n}<output id="o-${p.k}"></output></label>
+      <input type="range" id="pl-${p.k}" min="${p.min}" max="${p.max}" step="${p.st}" value="${p.v}"><small>${p.d}</small>`;
+    box.appendChild(w); inputs[p.k]=w.querySelector("input");
+  });
+  const val = k => parseFloat(inputs[k].value);
+  const fmt = (k,x) => (k==="rate"? x.toFixed(0) : (P.find(p=>p.k===k).st<.1? x.toFixed(2): x.toFixed(1)));
+
+  /* ---- Simulation of Eqs. (1)-(2), symplectic Euler ---- */
+  const N=40, DT=0.004, TEND=60, REC=25;
+  const TAU = 0.25/4500;          // seconds per unit of model time (0.25 -> 4.5 kHz)
+  function simulate(){
+    const R1=val("R1"), l1=val("l1"), z=val("z"), l2=val("l2"), M=val("M"), R2=val("R2"), U0=val("U0");
+    const k=l1+l2+2;
+    const U=new Float64Array(N), V=new Float64Array(N), Ud=new Float64Array(N), Vd=new Float64Array(N);
+    const a=new Float64Array(N), b=new Float64Array(N);
+    U[0]=U0;
+    const steps=Math.round(TEND/DT), nrec=Math.floor(steps/REC);
+    const st=new Float32Array(nrec*N), pu=new Float32Array(nrec), pv=new Float32Array(nrec);
+    let su=0, sv=0, cnt=0, r=0, ok=true;
+    for (let n=0;n<steps;n++){
+      for (let i=0;i<N;i++){
+        const ul=U[i>0?i-1:0], ur=U[i<N-1?i+1:N-1], vl=V[i>0?i-1:0], vr=V[i<N-1?i+1:N-1], u=U[i];
+        a[i] = -z*Ud[i] + 3*u*u - u*u*u - k*u + l2*V[i] + R1*(ul-2*u+ur);
+        b[i] = -M*l2*V[i] + M*l2*u + R2*(vl-2*V[i]+vr);
+      }
+      a[0] -= 1.0*Ud[0];                       // absorbing (transmission) end at the muscle
+      let A=0, B=0;
+      for (let i=0;i<N;i++){ Ud[i]+=a[i]*DT; Vd[i]+=b[i]*DT; U[i]+=Ud[i]*DT; V[i]+=Vd[i]*DT; if(i>0)A+=a[i]; B+=b[i]; }
+      su+=A; sv+=B; cnt++;
+      if (cnt===REC){
+        if (r<nrec){ pu[r]=su/REC; pv[r]=sv/REC; st.set(U, r*N); r++; }
+        su=sv=cnt=0;
+      }
+      if (!isFinite(U[N-1])) { ok=false; break; }
+    }
+    return {st, pu, pv, nrec, dts:DT*REC, ok};
+  }
+
+  /* ---- Spectrum via direct DFT (small N, no library needed) ---- */
+  function spectrum(x, dts, fmaxHz, nb){
+    const n=x.length, out=new Float32Array(nb);
+    for (let j=0;j<nb;j++){
+      const fHz = (j+1)/nb*fmaxHz, f = fHz*TAU; let re=0, im=0;
+      for (let t=0;t<n;t++){ const w=.5-.5*Math.cos(2*Math.PI*t/(n-1)); const ph=2*Math.PI*f*t*dts; re+=w*x[t]*Math.cos(ph); im-=w*x[t]*Math.sin(ph); }
+      out[j]=Math.hypot(re,im);
+    }
+    return out;
+  }
+
+  /* ---- Drawing ---- */
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function hex(c){ const m=c.replace("#",""); return [0,2,4].map(i=>parseInt(m.substr(i,2),16)); }
+  function fit(cv){ const r=cv.getBoundingClientRect(), d=window.devicePixelRatio||1; cv.width=Math.max(1,r.width*d); cv.height=r.height*d; const c=cv.getContext("2d"); c.setTransform(d,0,0,d,0,0); return [c,r.width,r.height]; }
+
+  function drawST(res){
+    const [c,W,H]=fit($("pl-st")); const L=34, B=22, w=W-L-6, h=H-B-6;
+    const img=c.createImageData(Math.max(1,Math.floor(res.nrec)), N);
+    const rest=hex(css("--surface")), buck=hex(css("--accent")), neg=hex(css("--vein"));
+    for (let t=0;t<res.nrec;t++) for (let i=0;i<N;i++){
+      const u=res.st[t*N+i]; let col, s;
+      if (u>=0){ s=Math.min(1,u/2.1); col=rest.map((r0,j)=>r0+(buck[j]-r0)*s); }
+      else { s=Math.min(1,-u/1.0); col=rest.map((r0,j)=>r0+(neg[j]-r0)*s); }
+      const o=(i*res.nrec+t)*4; img.data[o]=col[0]; img.data[o+1]=col[1]; img.data[o+2]=col[2]; img.data[o+3]=255;
+    }
+    const off=document.createElement("canvas"); off.width=res.nrec; off.height=N; off.getContext("2d").putImageData(img,0,0);
+    c.clearRect(0,0,W,H); c.imageSmoothingEnabled=false; c.drawImage(off, L, 4, w, h);
+    c.fillStyle=css("--muted"); c.font='12px "Bricolage Grotesque",system-ui,sans-serif';
+    const ms = TEND*TAU*1000;
+    for (let q=0;q<=4;q++){ const x=L+w*q/4; c.fillText((ms*q/4).toFixed(1)+(q===4?" ms":""), x-(q===4?30:q?10:0), H-6); }
+    c.save(); c.translate(12, 4+h/2); c.rotate(-Math.PI/2); c.textAlign="center"; c.fillText("rib", 0, 0); c.restore();
+  }
+
+  function drawSP(sT, sR){
+    const [c,W,H]=fit($("pl-sp")); const L=48, B=22, w=W-L-34, h=H-B-8;
+    c.clearRect(0,0,W,H);
+    const mx=Math.max(...sR, ...sT)||1, db=x=>Math.max(-50, 20*Math.log10(x/mx+1e-9));
+    c.strokeStyle=css("--line"); c.lineWidth=1; c.fillStyle=css("--muted"); c.font='12px "Bricolage Grotesque",system-ui,sans-serif';
+    for (let k=0;k<=20;k+=5){ const x=L+w*k/20; c.beginPath(); c.moveTo(x,6); c.lineTo(x,6+h); c.stroke(); c.fillText(k+(k===20?" kHz":""), x-(k?6:0), H-6); }
+    for (let d=0; d>=-50; d-=25){ const y=6+h*(-d/50); c.fillText(d+" dB", 0, y+4); }
+    [[sT, css("--muted"), 1.5],[sR, css("--accent"), 2.2]].forEach(([s,col,lw])=>{
+      c.strokeStyle=col; c.lineWidth=lw; c.beginPath();
+      s.forEach((v,j)=>{ const x=L+w*(j+1)/s.length, y=6+h*(-db(v)/50); j?c.lineTo(x,y):c.moveTo(x,y); }); c.stroke();
+    });
+  }
+
+  let last=null;
+  const BODY_GAIN=4;
+  function update(){
+    Object.keys(inputs).forEach(k=> $("o-"+k).textContent = fmt(k,val(k)));
+    const res=simulate(); last=res;
+    const warn=$("pl-warn");
+    if (!res.ok){ warn.textContent="The simulation became unstable at these settings. Try less coupling."; return; }
+    const rad=res.pu.map((x,i)=>x+BODY_GAIN*res.pv[i]);
+    const sT=spectrum(res.pu,res.dts,20000,160), sR=spectrum(rad,res.dts,20000,160);
+    drawST(res); drawSP(sT,sR);
+    // readouts
+    let reached=false, tFront=null; for (let t=0;t<res.nrec;t++){ if (res.st[t*N+N-1]>1.2){ reached=true; tFront=t*res.dts; break; } }
+    let buckled=0; for (let i=1;i<N;i++){ for (let t=0;t<res.nrec;t++) if (res.st[t*N+i]>1.2){ buckled++; break; } }
+    const pk = s => { let j=0; s.forEach((v,i)=>{ if(v>s[j]) j=i; }); return ((j+1)/s.length*20).toFixed(1); };
+    $("pl-read").innerHTML =
+      `<span>Ribs that snapped</span><b>${buckled} of ${N-1}</b>`+
+      `<span>Wave reached far end</span><b>${reached? (tFront*TAU*1000).toFixed(2)+" ms":"no"}</b>`+
+      `<span>Peak, tymbal only</span><b>${pk(sT)} kHz</b>`+
+      `<span>Peak, radiated</span><b>${pk(sR)} kHz</b>`;
+    const l1=val("l1");
+    warn.textContent = l1>=0.25 ? "λ₁ ≥ 0.25: each rib now has only one stable state, so nothing can snap through."
+      : (!reached && buckled<3 ? "The buckling wave dies out almost immediately. Try a stronger muscle pull or stiffer rib coupling." : "");
+  }
+
+  /* ---- Audio: resample the simulated pressure to 44.1 kHz and repeat at the firing rate ---- */
+  let ctx=null, srcNode=null;
+  function play(){
+    if (!last || !last.ok) return;
+    const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    ctx = ctx || new AC(); if (ctx.state==="suspended") ctx.resume();
+    const sr=ctx.sampleRate, body=$("pl-body").checked;
+    const sig=last.pu.map((x,i)=> x + (body? BODY_GAIN*last.pv[i]:0));
+    const tStep=last.dts*TAU;                          // seconds per recorded sample
+    const evLen=Math.floor(last.nrec*tStep*sr);
+    const ev=new Float32Array(evLen);
+    for (let s=0;s<evLen;s++){ const tt=s/sr/tStep, i=Math.floor(tt), f=tt-i; if(i+1<sig.length) ev[s]=sig[i]*(1-f)+sig[i+1]*f; }
+    // remove DC and fade edges
+    let m=0; ev.forEach(x=>m+=x); m/=evLen; for (let s=0;s<evLen;s++){ const e=Math.min(1,s/20,(evLen-s)/60); ev[s]=(ev[s]-m)*e; }
+    const dur=0.9, buf=ctx.createBuffer(1, Math.floor(dur*sr), sr), d=buf.getChannelData(0);
+    const per=1/val("rate");
+    for (let t0=0.02; t0<dur-0.01; t0+=per){
+      const o=Math.floor(t0*sr), g=0.85+0.3*Math.random();
+      for (let s=0;s<evLen && o+s<d.length;s++) d[o+s]+=ev[s]*g;
+    }
+    let pk=0; d.forEach(x=>pk=Math.max(pk,Math.abs(x))); const sc=pk?0.6/pk:0; for (let s=0;s<d.length;s++) d[s]*=sc;
+    if (srcNode) try{srcNode.stop();}catch(e){}
+    srcNode=ctx.createBufferSource(); srcNode.buffer=buf; srcNode.connect(ctx.destination); srcNode.start();
+  }
+
+  let timer=null;
+  Object.values(inputs).forEach(inp=>inp.addEventListener("input", ()=>{ clearTimeout(timer); timer=setTimeout(update, 60); }));
+  $("pl-play").addEventListener("click", play);
+  $("pl-reset").addEventListener("click", ()=>{ P.forEach(p=>{ if(p.k) inputs[p.k].value=p.v; }); update(); });
+  window.addEventListener("resize", ()=>{ clearTimeout(timer); timer=setTimeout(update,150); });
+  if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", update);
+  update();
 })();
 </script>
 </body>
