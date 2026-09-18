@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The tymbal of a cicada: nature's sound-generating metastructure</title>
+<meta name="description" content="How cicadas make sound: the tymbal as a natural metastructure. A chain of bistable oscillators coupled to resonators reproduces song frequencies across species. Nature Communications 16, 10270 (2025).">
+
+<!-- Social sharing previews -->
+<meta property="og:title" content="The tymbal of a cicada: nature's sound-generating metastructure">
+<meta property="og:description" content="A species-adaptable mechanical model of how cicadas make sound. Nature Communications, 2025.">
+<meta property="og:image" content="https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig1_HTML.png">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦗</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+
+<style>
+:root{
+  --bg:#EEF1EA;          /* pale lichen */
+  --surface:#E2E7DC;
+  --ink:#1F2A24;         /* bark */
+  --muted:#5F6B63;
+  --accent:#B87A12;      /* tymbal amber */
+  --vein:#3E6B5A;        /* wing vein green */
+  --line:#C6CEC1;
+  --measure:68ch;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151B18; --surface:#1E2622; --ink:#E4EAE2; --muted:#9AA79F;
+    --accent:#E0A43A; --vein:#7FB39D; --line:#34403A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151B18; --surface:#1E2622; --ink:#E4EAE2; --muted:#9AA79F;
+  --accent:#E0A43A; --vein:#7FB39D; --line:#34403A;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Source Serif 4", Georgia, "Times New Roman", serif;
+  font-size:1.125rem; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.sans{font-family:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif}
+a{color:var(--vein); text-underline-offset:.18em; text-decoration-thickness:1px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent); outline-offset:3px; border-radius:4px}
+img{max-width:100%; height:auto; display:block}
+
+.wrap{max-width:1080px; margin:0 auto; padding:0 1.5rem}
+.prose{max-width:var(--measure)}
+
+/* ---------- Hero ---------- */
+header.hero{padding:4.5rem 0 1rem}
+.venue{font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem; color:var(--muted); margin:0 0 1.25rem}
+.venue strong{color:var(--ink); font-weight:600}
+h1{
+  font-size:clamp(2.4rem, 6.2vw, 5rem); line-height:.98; letter-spacing:-.025em;
+  font-weight:800; margin:0; max-width:15ch;
+}
+.subtitle{
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;
+  font-size:clamp(1.25rem, 2.4vw, 1.75rem); font-weight:400; line-height:1.25;
+  color:var(--muted); margin:.9rem 0 0; max-width:30ch;
+}
+.authors{margin:2rem 0 0; font-size:1.05rem; max-width:var(--measure)}
+.authors sup{color:var(--muted); font-size:.7em}
+.affils{font-size:.9rem; color:var(--muted); margin:.5rem 0 0; max-width:var(--measure)}
+.actions{display:flex; flex-wrap:wrap; gap:.6rem; margin:2rem 0 0}
+.btn{
+  font-family:"Bricolage Grotesque",system-ui,sans-serif; font-weight:600; font-size:1rem;
+  display:inline-block; padding:.6rem 1.1rem; border-radius:999px;
+  border:1.5px solid var(--ink); color:var(--ink); text-decoration:none; background:transparent;
+  cursor:pointer;
+}
+.btn:hover{background:var(--ink); color:var(--bg)}
+.btn.primary{background:var(--ink); color:var(--bg)}
+.btn.primary:hover{background:var(--accent); border-color:var(--accent); color:#1b1204}
+
+/* ---------- Interactive chain ---------- */
+.demo{margin:3.5rem 0 1rem}
+.stage{
+  background:var(--surface); border-radius:20px; padding:1.25rem 1rem .5rem;
+  overflow-x:auto;
+}
+#chain{width:100%; min-width:640px; height:auto; display:block}
+#chain .base{stroke:var(--muted); stroke-width:2}
+#chain .bar{stroke:var(--ink); stroke-width:3; stroke-linecap:round; fill:none}
+#chain .hinge{fill:var(--bg); stroke:var(--muted); stroke-width:2}
+#chain .apex{fill:var(--ink)}
+#chain .apex.snapped{fill:var(--accent)}
+#chain .spring{stroke:var(--muted); stroke-width:1.5; fill:none}
+#chain .couple{stroke:var(--vein); stroke-width:1.5; fill:none; stroke-dasharray:3 3}
+#chain .res{fill:var(--vein)}
+#chain .lbl{font:500 13px "Bricolage Grotesque",system-ui,sans-serif; fill:var(--muted)}
+.controls{display:flex; flex-wrap:wrap; align-items:center; gap:1rem 1.5rem; margin:1rem 0 0}
+.toggle{display:flex; align-items:center; gap:.5rem; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.98rem; cursor:pointer}
+.toggle input{width:1.1rem; height:1.1rem; accent-color:var(--accent)}
+.caption{font-size:.95rem; color:var(--muted); max-width:var(--measure); margin:.9rem 0 0}
+
+/* ---------- Sections ---------- */
+section{padding:3.5rem 0 0}
+h2{font-size:clamp(1.7rem, 3.4vw, 2.4rem); line-height:1.1; letter-spacing:-.015em; font-weight:600; margin:0 0 1.1rem; max-width:24ch}
+h3{font-size:1.3rem; font-weight:600; margin:2.2rem 0 .5rem; line-height:1.2}
+p{margin:0 0 1rem}
+.lede{font-size:1.25rem; line-height:1.55}
+
+.finding{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:2rem 2.5rem;
+  align-items:start; padding:2.5rem 0; border-top:1px solid var(--line);
+}
+.finding:first-of-type{border-top:0}
+.finding h3{margin-top:0}
+.finding figure{margin:0}
+figure img{border-radius:10px; background:#fff}
+figcaption{font-size:.88rem; color:var(--muted); margin-top:.6rem; line-height:1.45}
+@media (max-width:820px){ .finding{grid-template-columns:1fr} }
+
+.numbers{display:flex; flex-wrap:wrap; gap:1rem 2.5rem; margin:1.25rem 0 0; padding:0; list-style:none}
+.numbers li{font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem; color:var(--muted); max-width:17ch; line-height:1.3}
+.numbers b{display:block; font-size:1.9rem; color:var(--ink); font-weight:600; line-height:1.1}
+
+.eq{overflow-x:auto; padding:.4rem 0; font-size:1.02rem}
+.params{font-size:1rem; color:var(--muted)}
+
+.methods{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:1.5rem 2rem; margin-top:1.25rem}
+.methods div{border-left:3px solid var(--vein); padding-left:1rem}
+.methods h3{margin:0 0 .3rem; font-size:1.08rem}
+.methods p{font-size:1rem; margin:0; color:var(--muted)}
+
+pre.bib{
+  background:var(--surface); border-radius:12px; padding:1.1rem 1.25rem; overflow-x:auto;
+  font-size:.85rem; line-height:1.5; margin:0;
+  font-family:ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+.bibwrap{position:relative; max-width:820px}
+.copy{position:absolute; top:.6rem; right:.6rem; font-size:.85rem; padding:.35rem .8rem}
+
+footer{margin:5rem 0 0; padding:2rem 0 3rem; border-top:1px solid var(--line); font-size:.92rem; color:var(--muted)}
+footer p{max-width:var(--measure)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="hero">
+  <p class="venue"><strong>Nature Communications</strong> 16, 10270 (2025), open access</p>
+  <h1>The tymbal of a cicada</h1>
+  <p class="subtitle">Nature's sound-generating metastructure, and one model that sings like many species.</p>
+
+  <p class="authors">
+    Pritam Ghoshal<sup>1,2</sup>, Richa Singh<sup>3</sup>, Hongcheng Tao<sup>1,2</sup>, Eshan Ganju<sup>4</sup>,
+    Nikhilesh Chawla<sup>4</sup>, James M. Gibert<sup>1,2</sup> and Anil K. Bajaj<sup>2</sup>
+  </p>
+  <p class="affils">
+    <sup>1</sup>Advanced Dynamics and Mechanics Lab, <sup>2</sup>Ray W. Herrick Laboratories, School of Mechanical Engineering,
+    <sup>3</sup>Department of Biological Sciences, <sup>4</sup>School of Materials Engineering. Purdue University, West Lafayette, Indiana.
+  </p>
+
+  <div class="actions">
+    <a class="btn primary" href="https://www.nature.com/articles/s41467-025-65149-5">Read the paper</a>
+    <a class="btn" href="https://www.nature.com/articles/s41467-025-65149-5.pdf">Download PDF</a>
+    <a class="btn" href="https://doi.org/10.24433/CO.7145974.v1">Code (Code Ocean)</a>
+    <a class="btn" href="https://doi.org/10.6084/m9.figshare.30025519">Species data (Figshare)</a>
+  </div>
+
+  <!-- Interactive: the memorable moment -->
+  <div class="demo" aria-labelledby="demo-title">
+    <div class="stage">
+      <svg id="chain" viewBox="0 0 960 270" role="img" aria-label="A chain of snapping truss units, each coupled by a spring to a resonator mass below. When triggered, a buckling wave travels left to right, then a faster unbuckling wave returns.">
+        <text class="lbl" x="20" y="22">Tymbal: chain of bistable trusses</text>
+        <text class="lbl" x="20" y="262">Body: chain of linear resonators</text>
+        <g id="g-springs"></g>
+        <g id="g-couple"></g>
+        <g id="g-bars"></g>
+        <g id="g-res"></g>
+        <g id="g-apex"></g>
+      </svg>
+    </div>
+    <div class="controls">
+      <button class="btn primary" id="snap" type="button">Snap the tymbal</button>
+      <label class="toggle"><input type="checkbox" id="sound" checked> Play the clicks</label>
+      <label class="toggle"><input type="checkbox" id="filter" checked> Body resonator filtering</label>
+    </div>
+    <p class="caption" id="demo-title">
+      Each triangle is a snapping unit, like one tymbal rib. The buckling wave starts at the posterior end and moves forward rib by rib;
+      when it reaches the far end, a much faster unbuckling wave reflects back. Switch off the body resonator to hear the raw broadband click,
+      then switch it on to hear the body shape it into a tuned note. This is a schematic animation for intuition, not the paper's simulation.
+    </p>
+  </div>
+</header>
+
+<main>
+<section id="abstract">
+  <div class="prose">
+    <h2>In brief</h2>
+    <p class="lede">
+      Cicadas generate sound through the interplay of tymbal buckling and body resonance, but a unified framework explaining the diversity
+      of calls across species has been absent. We conceptualize the cicada's sound-generation mechanism as a naturally occurring biological
+      metastructure, characterized by periodically arranged ribs and inherent frequency filtering.
+    </p>
+    <p>
+      We introduce a mechanical model comprising a chain of bistable oscillators coupled to a chain of resonators, which captures both the
+      snap-through dynamics of the tymbals and the subsequent acoustic filtering. It is the first species-adaptable framework capable of
+      reproducing the distinct song frequencies and call patterns observed across multiple cicada species.
+    </p>
+  </div>
+</section>
+
+<section id="findings">
+  <h2>What we found</h2>
+
+  <article class="finding">
+    <div class="prose">
+      <h3>The ribs snap one after another</h3>
+      <p>
+        Filming the dog-day cicada, <em>Neotibicen canicularis</em>, at 39,700 frames per second shows the tymbal buckling as a traveling wave.
+        It starts at the posterior rib and moves forward. Once it reaches the anterior end, the muscles relax and an unbuckling wave races back,
+        far faster than the forward wave. Each snap is a click; many of these rebound sequences together make the song.
+      </p>
+      <ul class="numbers">
+        <li><b>39,700</b> frames per second of high-speed video</li>
+        <li><b>~3 ms</b> for the forward buckling wave</li>
+        <li><b>~0.2 ms</b> for the reflected unbuckling wave</li>
+      </ul>
+    </div>
+    <figure>
+      <img src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig3_HTML.png"
+           alt="High-speed image sequence of the tymbal membrane with three marked ribs buckling in sequence" loading="lazy">
+      <figcaption>Fig. 3. Buckling sequence of three tracked ribs; red boxes mark the unbuckling sequence.</figcaption>
+    </figure>
+  </article>
+
+  <article class="finding">
+    <div class="prose">
+      <h3>The body works as a frequency filter</h3>
+      <p>
+        Vibrations measured on the tymbal itself, by high-speed imaging and laser vibrometry, span roughly 500 Hz to 15 kHz.
+        The sound that leaves the insect does not. The abdominal air cavity amplifies a band around 3 to 5.5 kHz and suppresses
+        frequencies below about 2 kHz, opening a band gap. That selective filtering is a hallmark of metamaterials.
+      </p>
+      <ul class="numbers">
+        <li><b>~3.8 kHz</b> predicted resonance of the abdominal cavity</li>
+        <li><b>&lt; 2 kHz</b> band gap in the recorded call</li>
+      </ul>
+    </div>
+    <figure>
+      <img src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig4_HTML.png"
+           alt="Waveforms and spectrograms of a male cicada call, rib displacements and laser vibrometry data" loading="lazy">
+      <figcaption>Fig. 4. The call of a male cicada: waveform, spectrograms, rib displacements and laser vibrometry.</figcaption>
+    </figure>
+  </article>
+
+  <article class="finding">
+    <div class="prose">
+      <h3>A chain of snapping trusses coupled to resonators</h3>
+      <p>
+        We represent the tymbal as a chain of bistable von Mises trusses with viscoelastic coupling, and the body as a chain of linear
+        spring–mass resonators. In the continuum limit, the tymbal displacement <span class="m">\(U\)</span> and resonator displacement
+        <span class="m">\(V\)</span> obey
+      </p>
+      <div class="eq">\[\frac{\partial^2 U}{\partial T^2}+\zeta\frac{\partial U}{\partial T}+U^3-3U^2+(\lambda_1+\lambda_2+2)U-R_1\frac{\partial^2 U}{\partial X^2}-\lambda_2 V=0\]</div>
+      <div class="eq">\[\frac{\partial^2 V}{\partial T^2}+M\lambda_2 V-M\lambda_2 U-R_2\frac{\partial^2 V}{\partial X^2}=0\]</div>
+      <p class="params">
+        Six nondimensional parameters \((R_1, R_2, \lambda_1, \lambda_2, M, \zeta)\) set the behaviour. The model reproduces the soliton-like
+        buckling front, the fast reflected unbuckling wave, and two frequency bands separated by a band gap, matching the experiments.
+      </p>
+    </div>
+    <figure>
+      <img src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig5_HTML.png"
+           alt="Schematic of the truss chain coupled to a resonator array, with potential energy curves" loading="lazy">
+      <figcaption>Fig. 5. Truss chain (orange) coupled to a resonator array (blue), and the double-well potential of a bistable unit.</figcaption>
+    </figure>
+  </article>
+
+  <article class="finding">
+    <div class="prose">
+      <h3>One model, many species</h3>
+      <p>
+        From a dataset of 60 species, we tuned the model to five more with very different songs, from the bladder cicada
+        <em>Cystosoma saundersii</em> to <em>Magicicada cassini</em>. Adjusting the parameters and the muscle actuation reproduces each
+        species' frequency bands and call patterns, including chirps and trills.
+      </p>
+      <p>
+        Because each parameter maps to anatomy, such as cavity volume or tymbal stiffness, the model points toward an inverse problem:
+        inferring body properties from a recording, and one day perhaps estimating the songs of extinct species from fossils.
+      </p>
+    </div>
+    <figure>
+      <img src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig7_HTML.png"
+           alt="Experimental and simulated spectrograms for six cicada species side by side" loading="lazy">
+      <figcaption>Fig. 7. Experimental and model spectrograms for six species.</figcaption>
+    </figure>
+  </article>
+</section>
+
+<section id="why">
+  <div class="prose">
+    <h2>Why it matters beyond cicadas</h2>
+    <p>
+      The tymbal turns modest muscle input into millisecond-scale, large-deformation snaps and then tunes the result acoustically.
+      Those are exactly the properties sought in soft robotic actuators, shape-morphing surfaces and programmable metamaterials.
+      The coupled bistable–resonator chain also suggests routes to band-gap tuning, targeted energy transfer, energy harvesting,
+      and structural health monitoring with physical reservoir computing.
+    </p>
+  </div>
+</section>
+
+<section id="methods">
+  <h2>How we looked</h2>
+  <div class="methods">
+    <div><h3>Micro-CT</h3><p>X-ray tomography at 43.2 µm per voxel revealed the tymbal muscles, apodeme and air cavity in 3D.</p></div>
+    <div><h3>High-speed imaging</h3><p>A Phantom camera at 39,700 fps tracked the in-plane motion of three tymbal ribs.</p></div>
+    <div><h3>Laser vibrometry</h3><p>Out-of-plane tymbal velocity sampled at 204.8 kHz alongside simultaneous audio.</p></div>
+    <div><h3>Material testing</h3><p>Creep tests on excised tymbals, fitted to a Prony series, gave the viscoelastic properties.</p></div>
+  </div>
+</section>
+
+<section id="cite">
+  <h2>Cite this work</h2>
+  <p class="prose">
+    Ghoshal, P., Singh, R., Tao, H., Ganju, E., Chawla, N., Gibert, J. M. and Bajaj, A. K.
+    The tymbal of a cicada: nature's sound-generating metastructure. <em>Nature Communications</em> 16, 10270 (2025).
+    <a href="https://doi.org/10.1038/s41467-025-65149-5">doi:10.1038/s41467-025-65149-5</a>
+  </p>
+  <div class="bibwrap">
+<pre class="bib" id="bibtex">@article{ghoshal2025tymbal,
+  title   = {The tymbal of a cicada: nature's sound-generating metastructure},
+  author  = {Ghoshal, Pritam and Singh, Richa and Tao, Hongcheng and Ganju, Eshan
+             and Chawla, Nikhilesh and Gibert, James M. and Bajaj, Anil K.},
+  journal = {Nature Communications},
+  volume  = {16},
+  pages   = {10270},
+  year    = {2025},
+  doi     = {10.1038/s41467-025-65149-5}
+}</pre>
+    <button class="btn copy" id="copybib" type="button">Copy BibTeX</button>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p>
+    This work was supported by NSF CAREER award CMMI-2145803. Figures are reproduced from the open-access article in
+    <em>Nature Communications</em>. Correspondence: <a href="mailto:jgibert@purdue.edu">James M. Gibert</a>.
+  </p>
+</footer>
+</div>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]})"></script>
+
+<script>
+(function(){
+  /* ---------- Build the chain ---------- */
+  const N = 12, X0 = 70, X1 = 890, BASE = 128, H = 34, HALF = 26, RES_Y = 212;
+  const dx = (X1 - X0) / (N - 1);
+  const NS = "http://www.w3.org/2000/svg";
+  const g = id => document.getElementById(id);
+  const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+
+  function zig(x1, y1, x2, y2, n, amp){
+    const L = Math.hypot(x2-x1, y2-y1), ux=(x2-x1)/L, uy=(y2-y1)/L, px=-uy, py=ux;
+    let d = `M${x1},${y1}`; const lead = .18;
+    d += ` L${x1+ux*L*lead},${y1+uy*L*lead}`;
+    for (let i=1;i<=n;i++){
+      const t = lead + (1-2*lead)*(i-.5)/n, s = (i%2?1:-1)*amp;
+      d += ` L${x1+ux*L*t+px*s},${y1+uy*L*t+py*s}`;
+    }
+    d += ` L${x1+ux*L*(1-lead)},${y1+uy*L*(1-lead)} L${x2},${y2}`;
+    return d;
+  }
+
+  el("line",{x1:X0-HALF-14,y1:BASE,x2:X1+HALF+14,y2:BASE,class:"base"}, g("chain"));
+  const units = [];
+  for (let i=0;i<N;i++){
+    const x = X0 + i*dx;
+    const u = {x, s:0, ring:0, tSnap:null, tUn:null, snapped:false, v:0, vv:0};
+    u.bar = el("path",{class:"bar"}, g("g-bars"));
+    el("circle",{cx:x-HALF,cy:BASE,r:4,class:"hinge"}, g("g-bars"));
+    el("circle",{cx:x+HALF,cy:BASE,r:4,class:"hinge"}, g("g-bars"));
+    u.apex = el("circle",{r:7,class:"apex"}, g("g-apex"));
+    u.couple = el("path",{class:"couple"}, g("g-couple"));
+    u.res = el("rect",{width:18,height:18,rx:3,class:"res"}, g("g-res"));
+    if (i>0){ u.spring = el("path",{class:"spring"}, g("g-springs")); u.rspring = el("path",{class:"spring"}, g("g-springs")); }
+    units.push(u);
+  }
+
+  function apexY(u){ return BASE - H*(1 - 2*u.s) + u.ring; }
+  function draw(){
+    units.forEach((u,i)=>{
+      const ay = apexY(u), ry = RES_Y + u.v;
+      u.bar.setAttribute("d", `M${u.x-HALF},${BASE} L${u.x},${ay} L${u.x+HALF},${BASE}`);
+      u.apex.setAttribute("cx", u.x); u.apex.setAttribute("cy", ay);
+      u.apex.classList.toggle("snapped", u.snapped);
+      u.couple.setAttribute("d", zig(u.x, ay+8, u.x, ry-9, 6, 5));
+      u.res.setAttribute("x", u.x-9); u.res.setAttribute("y", ry-9);
+      if (i>0){
+        const p = units[i-1];
+        u.spring.setAttribute("d", zig(p.x+8, apexY(p), u.x-8, ay, 5, 4));
+        u.rspring.setAttribute("d", zig(p.x+10, RES_Y+p.v, u.x-10, ry, 5, 4));
+      }
+    });
+  }
+  draw();
+
+  /* ---------- Sound: click, optionally shaped by a body resonance ---------- */
+  let ctx = null, noise = null;
+  function audio(){
+    if (!ctx){
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
+      ctx = new AC();
+      const len = Math.floor(ctx.sampleRate*0.012);
+      noise = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d = noise.getChannelData(0);
+      for (let i=0;i<len;i++) d[i] = (Math.random()*2-1) * Math.exp(-i/(len*0.18));
+    }
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }
+  function click(loud){
+    if (!g("sound").checked || !ctx) return;
+    const src = ctx.createBufferSource(); src.buffer = noise;
+    const out = ctx.createGain(); out.connect(ctx.destination);
+    if (g("filter").checked){
+      const bp = ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value = 4200; bp.Q.value = 6;
+      const hp = ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value = 2000;
+      src.connect(hp); hp.connect(bp); bp.connect(out);
+      out.gain.value = (loud ? 2.6 : 1.0);
+    } else {
+      src.connect(out); out.gain.value = (loud ? 0.35 : 0.14);
+    }
+    src.start();
+  }
+
+  /* ---------- Animation: forward buckling wave, fast reflected unbuckling ---------- */
+  const FWD = 110, PAUSE = 260, BACK = 14, SNAP = 28;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let t0 = null, raf = null;
+  const smooth = x => x<=0?0:x>=1?1:x*x*(3-2*x);
+
+  function start(){
+    if (raf) cancelAnimationFrame(raf);
+    const tEnd = (N-1)*FWD + SNAP + PAUSE;
+    units.forEach((u,i)=>{
+      u.tSnap = i*FWD; u.tUn = tEnd + (N-1-i)*BACK;
+      u.s = 0; u.ring = 0; u.snapped = false; u.firedA = false; u.firedB = false; u.v = 0; u.vv = 0;
+    });
+    t0 = performance.now(); raf = requestAnimationFrame(step);
+  }
+
+  function step(now){
+    const t = now - t0; let active = false;
+    units.forEach(u=>{
+      let target;
+      if (t < u.tUn){
+        u.s = smooth((t - u.tSnap)/SNAP);
+        if (t >= u.tSnap && !u.firedA){ u.firedA = true; click(true); }
+        const dt = t - u.tSnap - SNAP;
+        u.ring = dt>0 ? 5*Math.exp(-dt/70)*Math.sin(dt/9) : 0;
+      } else {
+        u.s = 1 - smooth((t - u.tUn)/(SNAP*0.5));
+        if (!u.firedB){ u.firedB = true; click(false); }
+        const dt = t - u.tUn - SNAP*0.5;
+        u.ring = dt>0 ? -3*Math.exp(-dt/60)*Math.sin(dt/8) : 0;
+      }
+      u.snapped = u.s > 0.5;
+      // resonator: lightly damped oscillator weakly driven by the truss (lags behind the snap)
+      target = (u.s*2 - 1 + 1) * 10;
+      u.vv += (target - u.v)*0.03 - u.vv*0.06; u.v += u.vv;
+      if (u.s>0.001 || Math.abs(u.vv)>0.01 || Math.abs(u.v)>0.05 || Math.abs(u.ring)>0.05) active = true;
+      if (t < u.tUn + 400) active = true;
+    });
+    draw();
+    raf = active ? requestAnimationFrame(step) : null;
+  }
+
+  g("snap").addEventListener("click", ()=>{ audio(); start(); });
+
+  // One orchestrated moment on load (silent; browsers block audio until a click)
+  if (!reduce){
+    const io = new IntersectionObserver((es)=>{ if (es[0].isIntersecting){ start(); io.disconnect(); } }, {threshold:.5});
+    io.observe(g("chain"));
+  }
+
+  /* ---------- Copy BibTeX ---------- */
+  g("copybib").addEventListener("click", async ()=>{
+    try { await navigator.clipboard.writeText(g("bibtex").textContent); g("copybib").textContent = "Copied"; }
+    catch(e){ g("copybib").textContent = "Select and copy"; }
+    setTimeout(()=> g("copybib").textContent = "Copy BibTeX", 1800);
+  });
+})();
+</script>
+</body>
+</html>
