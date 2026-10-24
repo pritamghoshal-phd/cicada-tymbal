@@ -94,6 +94,7 @@ h1{
   overflow-x:auto;
 }
 #chain{width:100%; min-width:640px; height:auto; display:block}
+@media (max-width:600px){ #chain{min-width:0} #chain .lbl{font-size:17px} }
 #chain .base{stroke:var(--muted); stroke-width:2}
 #chain .bar{stroke:var(--ink); stroke-width:3; stroke-linecap:round; fill:none}
 #chain .hinge{fill:var(--bg); stroke:var(--muted); stroke-width:2}
@@ -152,6 +153,8 @@ details.curious[open] summary{border-bottom:1px solid var(--line); margin-bottom
 
 /* ---------- Fig. 5, drawn in SVG ---------- */
 .figstage{background:var(--surface); border-radius:10px; overflow-x:auto}
+.swipe{display:none; font:500 .85rem "Bricolage Grotesque",system-ui,sans-serif; color:var(--muted); margin:0 0 .4rem}
+@media (max-width:560px){ .swipe{display:block} }
 #fig5a{display:block; width:100%; min-width:520px; height:auto}
 .fig5row{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; margin-top:.5rem}
 .fig5row svg{display:block; width:100%; height:auto; background:var(--surface); border-radius:10px}
@@ -195,11 +198,12 @@ pre.bib{
 }
 .bibwrap{position:relative; max-width:820px}
 .copy{position:absolute; top:.6rem; right:.6rem; font-size:.85rem; padding:.35rem .8rem}
+@media (max-width:600px){ .copy{position:static; margin-top:.6rem} }
 
 
 /* ---------- Playground ---------- */
 .play{display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:2rem 2.5rem; margin-top:1.5rem; align-items:start}
-@media (max-width:860px){ .play{grid-template-columns:1fr} }
+@media (max-width:860px){ .play{grid-template-columns:minmax(0,1fr)} .plots{order:-1} }
 .sliders{display:flex; flex-direction:column; gap:1rem}
 .sl label{display:flex; justify-content:space-between; gap:1rem; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem}
 .sl output{font-variant-numeric:tabular-nums; color:var(--accent); font-weight:600}
@@ -210,12 +214,21 @@ pre.bib{
 .plot{background:var(--surface); border-radius:16px; padding:1rem 1rem .8rem}
 .plot h3{margin:0 0 .5rem; font-size:1.02rem}
 .plot canvas{width:100%; height:220px; display:block}
-.readout{display:flex; flex-wrap:wrap; gap:.4rem 1.5rem; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem; margin:0}
+.readout{display:grid; grid-template-columns:repeat(2, max-content minmax(0,1fr)); gap:.35rem 1rem; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem; margin:0}
+@media (max-width:600px){ .readout{grid-template-columns:max-content minmax(0,1fr)} }
 .readout span{color:var(--muted)} .readout b{font-weight:600}
 .warn{color:var(--accent); font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem; min-height:1.3em; margin:0}
-.legend{display:flex; gap:1.2rem; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.85rem; color:var(--muted); margin:.4rem 0 0}
+.legend{display:flex; flex-wrap:wrap; gap:.3rem 1.2rem; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.85rem; color:var(--muted); margin:.4rem 0 0}
+.legend span{white-space:nowrap}
 .legend i{display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:.35rem; border-radius:2px}
 .playbtns{display:flex; flex-wrap:wrap; gap:.6rem; align-items:center}
+
+@media (pointer:coarse), (max-width:600px){
+  .sl input[type=range]{height:32px}
+  .toggle{min-height:44px}
+  .toggle input{width:1.35rem; height:1.35rem}
+  .btn{min-height:44px}
+}
 
 footer{margin:5rem 0 0; padding:2rem 0 3rem; border-top:1px solid var(--line); font-size:.92rem; color:var(--muted)}
 footer p{max-width:var(--measure)}
@@ -250,8 +263,8 @@ footer p{max-width:var(--measure)}
   <div class="demo" aria-labelledby="demo-title">
     <div class="stage">
       <svg id="chain" viewBox="0 0 960 285" role="img" aria-label="A chain of snapping truss units rotated sideways, each connected by a rigid L-shaped link and a horizontal spring to a resonator mass below. When triggered, a buckling wave travels left to right, then a faster unbuckling wave returns.">
-        <text class="lbl" x="20" y="22">Tymbal: a row of ribs that snap</text>
-        <text class="lbl" x="20" y="272">Body: a row of springy masses that ring at their own pitch</text>
+        <text class="lbl" id="lbl-top" x="20" y="22">Tymbal: a row of ribs that snap</text>
+        <text class="lbl" id="lbl-bot" x="20" y="272">Body: a row of springy masses that ring at their own pitch</text>
         <g id="g-springs"></g>
         <g id="g-couple"></g>
         <g id="g-bars"></g>
@@ -405,6 +418,7 @@ footer p{max-width:var(--measure)}
       </details>
     </div>
     <figure class="fig5">
+      <p class="swipe" aria-hidden="true">Swipe the diagram sideways to see all of it →</p>
       <div class="figstage">
         <svg id="fig5a" viewBox="0 0 640 320" role="img" aria-label="Three unit cells of the model. Top band: each rib is a mass held between two inclined springs pinned to the ground, with a spring and damper to ground and springs to its neighbours. A rigid link hangs from each mass to a horizontal spring that drives a resonator mass in the bottom band; resonator masses are joined to their neighbours by springs."></svg>
       </div>
@@ -473,7 +487,7 @@ footer p{max-width:var(--measure)}
       <div class="plot">
         <h3>Which ribs are snapped, moment by moment</h3>
         <canvas id="pl-st" aria-label="Space-time map of rib displacement. Horizontal axis is time, vertical axis is position along the tymbal."></canvas>
-        <div class="legend"><span><i style="background:var(--accent)"></i>buckled</span><span><i style="background:var(--line)"></i>at rest</span><span>Rear of the tymbal at top, front at bottom</span></div>
+        <div class="legend"><span><i style="background:var(--accent)"></i>buckled</span><span><i style="background:var(--line)"></i>at rest</span><span style="white-space:normal">Rear of the tymbal at top, front at bottom</span></div>
       </div>
 
       <div class="plot">
@@ -555,7 +569,14 @@ footer p{max-width:var(--measure)}
      its mass snaps horizontally from pointing left (rest) to pointing right (buckled).
      A rigid, massless L-shaped link hangs from each truss mass; a horizontal spring at
      the end of its arm couples it to the resonator mass in the row below. */
-  const N = 10, X0 = 110, X1 = 860, YT = 98, HV = 32, HH = 15;
+  // Phones get a shorter chain that fits the screen instead of a sideways-scrolling one
+  const narrow = window.matchMedia("(max-width: 600px)").matches;
+  const N = narrow ? 5 : 10, X0 = narrow ? 60 : 110, X1 = narrow ? 380 : 860, YT = 98, HV = 32, HH = 15;
+  if (narrow){
+    document.getElementById("chain").setAttribute("viewBox", "0 0 440 285");
+    document.getElementById("lbl-top").textContent = "Tymbal: ribs that snap";
+    document.getElementById("lbl-bot").textContent = "Body: springs and masses that ring";
+  }
   const YL = 208, ARM = 6, RES_OFF = 38, RW = 9, RTOP = 11, RBOT = 21, R2Y = YL + 14;
   const dx = (X1 - X0) / (N - 1);
   const NS = "http://www.w3.org/2000/svg";
