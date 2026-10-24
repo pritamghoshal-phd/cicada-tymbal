@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The tymbal of a cicada: nature's sound-generating metastructure</title>
-<meta name="description" content="How cicadas make sound: the tymbal as a natural metastructure. A chain of bistable oscillators coupled to resonators reproduces song frequencies across species. Nature Communications 16, 10270 (2025).">
+<meta name="description" content="How cicadas sing: a row of ribs on the tymbal pops like a jar lid, and the hollow abdomen picks the pitch like a bottle. One simple model reproduces the songs of many species. Nature Communications 16, 10270 (2025).">
 
 <!-- Social sharing previews -->
 <meta property="og:title" content="The tymbal of a cicada: nature's sound-generating metastructure">
-<meta property="og:description" content="A species-adaptable mechanical model of how cicadas make sound. Nature Communications, 2025.">
+<meta property="og:description" content="How cicadas sing, and one simple model that sings like many species. Nature Communications, 2025.">
 <meta property="og:image" content="https://media.springernature.com/m685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig1_HTML.png">
 <meta property="og:type" content="article">
 <meta name="twitter:card" content="summary_large_image">
@@ -132,6 +132,24 @@ figcaption{font-size:.88rem; color:var(--muted); margin-top:.6rem; line-height:1
 .numbers li{font-family:"Bricolage Grotesque",system-ui,sans-serif; font-size:.95rem; color:var(--muted); max-width:17ch; line-height:1.3}
 .numbers b{display:block; font-size:1.9rem; color:var(--ink); font-weight:600; line-height:1.1}
 
+.steps{list-style:none; padding:0; margin:1.75rem 0 0; display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:1.5rem 2.5rem}
+.steps h3{margin:0 0 .5rem; display:flex; align-items:baseline; gap:.6rem}
+.steps p{margin:0}
+.stepno{flex:none; display:inline-grid; place-items:center; width:1.8rem; height:1.8rem; border-radius:50%; background:var(--accent); color:#1b1204; font-size:1rem; font-weight:800; transform:translateY(-.1rem)}
+@media (max-width:420px){ .steps{grid-template-columns:1fr} }
+
+.box{margin:2.5rem 0 0; max-width:760px; background:var(--surface); border-radius:16px; padding:1.4rem 1.5rem .6rem; border-left:4px solid var(--vein)}
+.box h3{margin:0 0 .6rem; color:var(--vein)}
+.box p{font-size:1.02rem}
+
+.abstract{max-width:var(--measure); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:1.25rem 0 .4rem}
+.abstract h2{font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; font-weight:600; color:var(--muted); margin:0 0 .6rem}
+.abstract p{font-size:.92rem; line-height:1.55; color:var(--muted)}
+
+details.curious{margin:1.25rem 0 0; border:1px solid var(--line); border-radius:12px; padding:.2rem 1rem}
+details.curious summary{cursor:pointer; padding:.6rem 0; font-family:"Bricolage Grotesque",system-ui,sans-serif; font-weight:600; color:var(--vein)}
+details.curious[open] summary{border-bottom:1px solid var(--line); margin-bottom:.9rem}
+
 .eq{overflow-x:auto; padding:.4rem 0; font-size:1.02rem}
 .params{font-size:1rem; color:var(--muted)}
 
@@ -179,7 +197,7 @@ footer p{max-width:var(--measure)}
 <header class="hero">
   <p class="venue"><strong>Nature Communications</strong> 16, 10270 (2025), open access</p>
   <h1>The tymbal of a cicada</h1>
-  <p class="subtitle">Nature's sound-generating metastructure, and one model that sings like many species.</p>
+  <p class="subtitle">How a row of snapping ribs and a hollow belly make a cicada sing, and one simple model that can sing like many species.</p>
 
   <p class="authors">
     Pritam Ghoshal<sup>1,2</sup>, Richa Singh<sup>3</sup>, Hongcheng Tao<sup>1,2</sup>, Eshan Ganju<sup>4</sup>,
@@ -202,8 +220,8 @@ footer p{max-width:var(--measure)}
   <div class="demo" aria-labelledby="demo-title">
     <div class="stage">
       <svg id="chain" viewBox="0 0 960 285" role="img" aria-label="A chain of snapping truss units rotated sideways, each connected by a rigid L-shaped link and a horizontal spring to a resonator mass below. When triggered, a buckling wave travels left to right, then a faster unbuckling wave returns.">
-        <text class="lbl" x="20" y="22">Tymbal: chain of bistable trusses</text>
-        <text class="lbl" x="20" y="272">Body: chain of linear resonators, each coupled through a rigid L-shaped link</text>
+        <text class="lbl" x="20" y="22">Tymbal: a row of ribs that snap</text>
+        <text class="lbl" x="20" y="272">Body: a row of springy masses that ring at their own pitch</text>
         <g id="g-springs"></g>
         <g id="g-couple"></g>
         <g id="g-bars"></g>
@@ -214,26 +232,68 @@ footer p{max-width:var(--measure)}
     <div class="controls">
       <button class="btn primary" id="snap" type="button">Snap the tymbal</button>
       <label class="toggle"><input type="checkbox" id="sound" checked> Play the clicks</label>
-      <label class="toggle"><input type="checkbox" id="filter" checked> Body resonator filtering</label>
+      <label class="toggle"><input type="checkbox" id="filter" checked> Let the body shape the sound</label>
     </div>
     <p class="caption" id="demo-title">
-      Each sideways truss is a snapping unit, like one tymbal rib, and its mass flips from left to right as it buckles. A rigid L-shaped link carries that motion down to a horizontal spring that drives the body's resonator mass. The buckling wave starts at the posterior end and moves forward rib by rib;
-      when it reaches the far end, a much faster unbuckling wave reflects back. Switch off the body resonator to hear the raw broadband click,
-      then switch it on to hear the body shape it into a tuned note. This is a schematic animation for intuition, not the paper's simulation.
+      Each zigzag in the top row stands for one rib. Push it hard enough and it flips from one side to the other with a snap. The flips
+      run along the row one after another, then flip back far faster. The bottom row is the cicada's body, nudged by every snap.
+      Turn off the body to hear the raw clicks, then turn it on to hear them become a note. This is a cartoon for intuition, not the
+      paper's simulation; for that, see <a href="#playground">Play with the model</a>.
     </p>
   </div>
 </header>
 
 <main>
-<section id="abstract">
+<section id="how">
   <div class="prose">
-    <h2>In brief</h2>
+    <h2>How a cicada sings</h2>
     <p class="lede">
+      On each side of a male cicada's abdomen sits a tymbal: a small, stiff, ribbed patch of cuticle. It is a drum that the cicada
+      plays from the inside, and its song comes from two simple steps.
+    </p>
+  </div>
+
+  <ol class="steps">
+    <li>
+      <h3><span class="stepno">1</span>The ribs pop, like a jar lid</h3>
+      <p>
+        Press the dome on a jar lid and it gives way with a click, then pops back when you let go. Each rib in the tymbal does the same
+        thing: it has two stable shapes and snaps between them. A muscle pulls on one end of the tymbal and the ribs buckle one after
+        another, like a row of dominoes. When the muscle lets go they spring back, much faster. Every snap is a click, a sharp burst
+        that contains a smear of many frequencies at once.
+      </p>
+    </li>
+    <li>
+      <h3><span class="stepno">2</span>The body picks the pitch, like a bottle</h3>
+      <p>
+        Blow across the mouth of a bottle and it hums one note, set by how much air is inside. A cicada's abdomen is largely hollow, and
+        the air inside does the same job. It boosts a narrow range of pitches from the clicks and mutes the rest. What comes out is no
+        longer a noisy click but a tuned song, and because body sizes and shapes differ, each species sounds different.
+      </p>
+    </li>
+  </ol>
+
+  <aside class="box" aria-labelledby="meta-title">
+    <h3 id="meta-title">What is a metamaterial?</h3>
+    <p>
+      Most materials get their properties from what they are made of. A <strong>metamaterial</strong> gets them from how it is built:
+      a small unit repeated over and over, so the pattern, not the substance, decides how waves pass through it. Many are designed
+      to block some frequencies completely while letting others through, a gap engineers call a <em>band gap</em>.
+    </p>
+    <p>
+      The tymbal fits that description: a row of near-identical snapping ribs joined to a body that filters out the low notes. Engineers
+      have only been building metamaterials on purpose for a few decades. Cicadas have been carrying one around for millions of years.
+    </p>
+  </aside>
+</section>
+
+<section id="abstract" aria-labelledby="abs-title">
+  <div class="abstract">
+    <h2 id="abs-title">Published abstract</h2>
+    <p>
       Cicadas generate sound through the interplay of tymbal buckling and body resonance, but a unified framework explaining the diversity
       of calls across species has been absent. We conceptualize the cicada's sound-generation mechanism as a naturally occurring biological
       metastructure, characterized by periodically arranged ribs and inherent frequency filtering.
-    </p>
-    <p>
       We introduce a mechanical model comprising a chain of bistable oscillators coupled to a chain of resonators, which captures both the
       snap-through dynamics of the tymbals and the subsequent acoustic filtering. It is the first species-adaptable framework capable of
       reproducing the distinct song frequencies and call patterns observed across multiple cicada species.
@@ -246,84 +306,99 @@ footer p{max-width:var(--measure)}
 
   <article class="finding">
     <div class="prose">
-      <h3>The ribs snap one after another</h3>
+      <h3>The ribs really do snap one after another</h3>
       <p>
-        Filming the dog-day cicada, <em>Neotibicen canicularis</em>, at 39,700 frames per second shows the tymbal buckling as a traveling wave.
-        It starts at the posterior rib and moves forward. Once it reaches the anterior end, the muscles relax and an unbuckling wave races back,
-        far faster than the forward wave. Each snap is a click; many of these rebound sequences together make the song.
+        We filmed the dog-day cicada, <em>Neotibicen canicularis</em>, with a camera shooting almost 40,000 frames a second. The tymbal does not buckle all at once. The buckling starts at the rear rib and moves forward, rib by rib. When it
+        reaches the front, the muscle relaxes and the ribs pop back, about fifteen times faster than they went in. Each snap is a click,
+        and a cicada's song is many of these in-and-out sequences repeated in quick succession.
       </p>
       <ul class="numbers">
         <li><b>39,700</b> frames per second of high-speed video</li>
-        <li><b>~3 ms</b> for the forward buckling wave</li>
-        <li><b>~0.2 ms</b> for the reflected unbuckling wave</li>
+        <li><b>~3 ms</b> for the ribs to buckle front to back</li>
+        <li><b>~0.2 ms</b> for them to pop back</li>
       </ul>
     </div>
     <figure>
       <img src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig3_HTML.png"
            alt="High-speed image sequence of the tymbal membrane with three marked ribs buckling in sequence" loading="lazy">
-      <figcaption>Fig. 3. Buckling sequence of three tracked ribs; red boxes mark the unbuckling sequence.</figcaption>
+      <figcaption>Fig. 3. Three tracked ribs buckling in turn; red boxes mark them popping back.</figcaption>
     </figure>
   </article>
 
   <article class="finding">
     <div class="prose">
-      <h3>The body works as a frequency filter</h3>
+      <h3>The body throws away the notes it doesn't want</h3>
       <p>
-        Vibrations measured on the tymbal itself, by high-speed imaging and laser vibrometry, span roughly 500 Hz to 15 kHz.
-        The sound that leaves the insect does not. The abdominal air cavity amplifies a band around 3 to 5.5 kHz and suppresses
-        frequencies below about 2 kHz, opening a band gap. That selective filtering is a hallmark of metamaterials.
+        On the tymbal itself, the vibrations cover a huge range, from about 500 Hz (around the B above middle C) up to 15 kHz, close to the
+        top of human hearing. The sound that actually leaves the insect is much narrower. The air in the abdomen boosts pitches between
+        roughly 3 and 5.5 kHz and almost silences everything below about 2 kHz. That missing stretch of frequencies is a band gap, the
+        signature of a metamaterial.
       </p>
       <ul class="numbers">
-        <li><b>~3.8 kHz</b> predicted resonance of the abdominal cavity</li>
-        <li><b>&lt; 2 kHz</b> band gap in the recorded call</li>
+        <li><b>~3.8 kHz</b> predicted natural pitch of the air in the abdomen</li>
+        <li><b>&lt; 2 kHz</b> nearly silent in the recorded call</li>
       </ul>
     </div>
     <figure>
       <img src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig4_HTML.png"
            alt="Waveforms and spectrograms of a male cicada call, rib displacements and laser vibrometry data" loading="lazy">
-      <figcaption>Fig. 4. The call of a male cicada: waveform, spectrograms, rib displacements and laser vibrometry.</figcaption>
+      <figcaption>Fig. 4. The call of a male cicada: waveform, spectrograms, rib motion and laser measurements of the tymbal.</figcaption>
     </figure>
   </article>
 
   <article class="finding">
     <div class="prose">
-      <h3>A chain of snapping trusses coupled to resonators</h3>
+      <h3>A model built from snapping links and springs</h3>
       <p>
-        We represent the tymbal as a chain of bistable von Mises trusses with viscoelastic coupling, and the body as a chain of linear
-        spring–mass resonators. In the continuum limit, the tymbal displacement <span class="m">\(U\)</span> and resonator displacement
-        <span class="m">\(V\)</span> obey
+        To capture both steps at once, we model the tymbal as a row of tiny snapping links, each with two resting positions like the jar lid,
+        joined to their neighbours by soft springs. Underneath sits a second row of masses on springs that stands in for the body and rings
+        at its own pitch. Kick the first link and the model does what the real insect does: a snap travels down the row, a faster snap
+        comes back, and the body turns the clicks into two bands of sound with a quiet gap between them.
       </p>
-      <div class="eq">\[\frac{\partial^2 U}{\partial T^2}+\zeta\frac{\partial U}{\partial T}+U^3-3U^2+(\lambda_1+\lambda_2+2)U-R_1\frac{\partial^2 U}{\partial X^2}-\lambda_2 V=0\]</div>
-      <div class="eq">\[\frac{\partial^2 V}{\partial T^2}+M\lambda_2 V-M\lambda_2 U-R_2\frac{\partial^2 V}{\partial X^2}=0\]</div>
-      <p class="params">
-        Six nondimensional parameters \((R_1, R_2, \lambda_1, \lambda_2, M, \zeta)\) set the behaviour. The model reproduces the soliton-like
-        buckling front, the fast reflected unbuckling wave, and two frequency bands separated by a band gap, matching the experiments.
-      </p>
+      <details class="curious">
+        <summary>For the curious: the equations</summary>
+        <p>
+          Each snapping link is a bistable von Mises truss with viscoelastic coupling to its neighbours, and the body is a chain of linear
+          spring–mass resonators. Treating the chain as continuous, the tymbal displacement <span class="m">\(U\)</span> and the resonator
+          displacement <span class="m">\(V\)</span> obey
+        </p>
+        <div class="eq">\[\frac{\partial^2 U}{\partial T^2}+\zeta\frac{\partial U}{\partial T}+U^3-3U^2+(\lambda_1+\lambda_2+2)U-R_1\frac{\partial^2 U}{\partial X^2}-\lambda_2 V=0\]</div>
+        <div class="eq">\[\frac{\partial^2 V}{\partial T^2}+M\lambda_2 V-M\lambda_2 U-R_2\frac{\partial^2 V}{\partial X^2}=0\]</div>
+        <p class="params">
+          The \(U^3-3U^2\) terms give each rib its two stable shapes. \(R_1\) and \(R_2\) set how strongly neighbours pull on each other
+          along the tymbal and along the body, \(\lambda_1\) is the truss stiffness, \(\lambda_2\) couples tymbal to body, \(M\) sets the
+          body's resonance and \(\zeta\) is damping. These six nondimensional numbers are enough to reproduce the soliton-like buckling front,
+          the fast reflected unbuckling wave, and two frequency bands separated by a band gap. The playground below solves the discrete
+          version (Eqs. 1–2 in the paper).
+        </p>
+      </details>
     </div>
     <figure>
       <img src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig5_HTML.png"
            alt="Schematic of the truss chain coupled to a resonator array, with potential energy curves" loading="lazy">
-      <figcaption>Fig. 5. Truss chain (orange) coupled to a resonator array (blue), and the double-well potential of a bistable unit.</figcaption>
+      <figcaption>Fig. 5. The snapping row (orange) coupled to the body's resonators (blue), and the two-valley energy curve that gives each rib two stable shapes.</figcaption>
     </figure>
   </article>
 
   <article class="finding">
     <div class="prose">
-      <h3>One model, many species</h3>
+      <h3>One model, many voices</h3>
       <p>
-        From a dataset of 60 species, we tuned the model to five more with very different songs, from the bladder cicada
-        <em>Cystosoma saundersii</em> to <em>Magicicada cassini</em>. Adjusting the parameters and the muscle actuation reproduces each
-        species' frequency bands and call patterns, including chirps and trills.
+        Cicada songs vary enormously, from buzzes to chirps to trills. Using a dataset of 60 species, we retuned the same model for five more
+        with very different songs, from Australia's bladder cicada, <em>Cystosoma saundersii</em>, to the North American periodical cicada
+        <em>Magicicada cassini</em>. Changing a few settings and the rhythm of the muscle was enough to match each species' pitch and
+        call pattern.
       </p>
       <p>
-        Because each parameter maps to anatomy, such as cavity volume or tymbal stiffness, the model points toward an inverse problem:
-        inferring body properties from a recording, and one day perhaps estimating the songs of extinct species from fossils.
+        Each setting corresponds to something physical, such as the size of the air cavity or the stiffness of the tymbal. That opens the
+        door to running the model in reverse: listening to a recording and working out what the insect's body must be like. One day it might
+        even let us estimate how extinct cicadas sounded, from their fossils.
       </p>
     </div>
     <figure>
       <img src="https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41467-025-65149-5/MediaObjects/41467_2025_65149_Fig7_HTML.png"
            alt="Experimental and simulated spectrograms for six cicada species side by side" loading="lazy">
-      <figcaption>Fig. 7. Experimental and model spectrograms for six species.</figcaption>
+      <figcaption>Fig. 7. Recorded (experiment) and model songs for six species, shown as spectrograms: pitch on the vertical axis, time on the horizontal.</figcaption>
     </figure>
   </article>
 </section>
@@ -333,10 +408,10 @@ footer p{max-width:var(--measure)}
   <div class="prose">
     <h2>Play with the model</h2>
     <p>
-      This panel solves the discrete tymbal–resonator chain from the paper (Eqs. 1–2) live in your browser, with 40 unit cells.
-      The first cell receives the muscle pull, then the model runs freely. The sound you hear comes straight from the simulation.
-      It is the summed acceleration of the ribs plus the resonator chain, repeated at the muscle firing rate.
-      Change a parameter and press play again to hear the difference.
+      This is the real model from the paper, running in your browser with 40 ribs. A muscle tug starts the first rib, and everything
+      after that is the physics playing out. The sound you hear is computed straight from the simulation and repeated at the muscle's
+      firing rate. Move a slider, then press play again to hear what changed. Try making the ribs too stiff to snap, or switching the
+      body off to hear the raw clicks.
     </p>
   </div>
 
@@ -346,27 +421,27 @@ footer p{max-width:var(--measure)}
     <div class="plots">
       <div class="playbtns">
         <button class="btn primary" id="pl-play" type="button">Play the call</button>
-        <label class="toggle"><input type="checkbox" id="pl-body" checked> Include body resonator in the sound</label>
+        <label class="toggle"><input type="checkbox" id="pl-body" checked> Let the body shape the sound</label>
         <button class="btn" id="pl-reset" type="button">Reset parameters</button>
       </div>
       <p class="warn" id="pl-warn" role="status"></p>
 
       <div class="plot">
-        <h3>Rib displacement along the chain over time</h3>
+        <h3>Which ribs are snapped, moment by moment</h3>
         <canvas id="pl-st" aria-label="Space-time map of rib displacement. Horizontal axis is time, vertical axis is position along the tymbal."></canvas>
-        <div class="legend"><span><i style="background:var(--accent)"></i>buckled</span><span><i style="background:var(--line)"></i>at rest</span><span>Posterior end at top, anterior at bottom</span></div>
+        <div class="legend"><span><i style="background:var(--accent)"></i>buckled</span><span><i style="background:var(--line)"></i>at rest</span><span>Rear of the tymbal at top, front at bottom</span></div>
       </div>
 
       <div class="plot">
-        <h3>Spectrum of one click sequence</h3>
+        <h3>Which pitches are in the sound</h3>
         <canvas id="pl-sp" aria-label="Frequency spectrum of the simulated sound."></canvas>
-        <div class="legend"><span><i style="background:var(--muted)"></i>tymbal only</span><span><i style="background:var(--accent)"></i>tymbal + body (radiated)</span></div>
+        <div class="legend"><span><i style="background:var(--muted)"></i>tymbal only</span><span><i style="background:var(--accent)"></i>tymbal + body (what you'd hear)</span></div>
       </div>
 
       <p class="readout" id="pl-read"></p>
       <p class="caption" style="margin:0">
-        Model time is scaled so the tymbal's own band lands near 4–5 kHz, as measured in <em>N. canicularis</em>. Absolute pitch is therefore
-        illustrative, but shifts caused by the parameters are real outputs of the equations.
+        The model's clock is scaled so the tymbal's own pitch lands near 4–5 kHz, as measured in <em>N. canicularis</em>. So the exact
+        pitch is illustrative, but the way it shifts when you move a slider comes straight from the equations.
       </p>
     </div>
   </div>
@@ -376,10 +451,10 @@ footer p{max-width:var(--measure)}
   <div class="prose">
     <h2>Why it matters beyond cicadas</h2>
     <p>
-      The tymbal turns modest muscle input into millisecond-scale, large-deformation snaps and then tunes the result acoustically.
-      Those are exactly the properties sought in soft robotic actuators, shape-morphing surfaces and programmable metamaterials.
-      The coupled bistable–resonator chain also suggests routes to band-gap tuning, targeted energy transfer, energy harvesting,
-      and structural health monitoring with physical reservoir computing.
+      A cicada turns a modest muscle tug into fast, large snaps, then tunes the result into a loud, clear note. Engineers want exactly
+      that trick for soft robots, surfaces that change shape on command, and materials that can be programmed to block or pass chosen
+      vibrations. The same snap-plus-resonator design also points to ways of tuning band gaps, steering vibration energy where it is wanted,
+      harvesting energy from motion, and monitoring the health of structures.
     </p>
   </div>
 </section>
@@ -387,10 +462,10 @@ footer p{max-width:var(--measure)}
 <section id="methods">
   <h2>How we looked</h2>
   <div class="methods">
-    <div><h3>Micro-CT</h3><p>X-ray tomography at 43.2 µm per voxel revealed the tymbal muscles, apodeme and air cavity in 3D.</p></div>
-    <div><h3>High-speed imaging</h3><p>A Phantom camera at 39,700 fps tracked the in-plane motion of three tymbal ribs.</p></div>
-    <div><h3>Laser vibrometry</h3><p>Out-of-plane tymbal velocity sampled at 204.8 kHz alongside simultaneous audio.</p></div>
-    <div><h3>Material testing</h3><p>Creep tests on excised tymbals, fitted to a Prony series, gave the viscoelastic properties.</p></div>
+    <div><h3>3D X-ray scans</h3><p>Micro-CT at 43.2 µm per voxel revealed the tymbal muscles, the tendon-like apodeme and the air cavity inside the abdomen.</p></div>
+    <div><h3>High-speed video</h3><p>A camera running at 39,700 frames per second tracked three tymbal ribs as they snapped.</p></div>
+    <div><h3>Laser vibrometry</h3><p>A laser measured how fast the tymbal surface moved, 204,800 times a second, while a microphone recorded the sound.</p></div>
+    <div><h3>Material testing</h3><p>Holding removed tymbals under a steady load and watching them slowly give showed how springy, and how squishy, the material is.</p></div>
   </div>
 </section>
 
