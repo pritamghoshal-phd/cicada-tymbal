@@ -494,9 +494,9 @@ footer p{max-width:var(--measure)}
     </p>
     <p>
       When the muscle lets go, the landscape tilts back, and what happens next depends on the rib. If the second valley is still there with
-      no pull at all, a lone rib stays in it, like a jar lid stuck inside out. In the tymbal its neighbours eventually drag it home, but
-      slowly, as a wave creeping along the row. If that valley only exists while the rib is being pulled, every rib rolls home by itself
-      the moment the pull fades, so the snap-back is quick. Real tymbals spring back on their own when the muscle relaxes; which kind of rib
+      no pull at all, a rib that is let go gently stays in it, like a jar lid stuck inside out. But the hill it has to climb to get home is
+      low, so a jolt can knock it back: a sudden release, or the body still ringing from the snap. If that valley only exists while the rib
+      is being pulled, the rib rolls home by itself the moment the pull fades, jolt or no jolt. Real tymbals spring back on their own when the muscle relaxes; which kind of rib
       they have is one of the questions we are exploring. The plot below shows a single rib. Try both kinds.
     </p>
   </div>
@@ -511,7 +511,7 @@ footer p{max-width:var(--measure)}
       <div class="sl">
         <label for="ac-l1">Rib stiffness, λ₁<output id="ac-l1o"></output></label>
         <input type="range" id="ac-l1" min="0" max="0.9" step="0.01" value="0.1">
-        <small>Below 0.25 a lone rib stays buckled after release (in the tymbal, its neighbours slowly pull it back). Between 0.25 and 1 it snaps back on its own.</small>
+        <small>Below 0.25 a gently released rib stays buckled unless something jolts it. Between 0.25 and 1 it always snaps back on its own.</small>
       </div>
       <div class="playbtns">
         <button class="btn primary" id="ac-go" type="button">Pull and release</button>
@@ -548,9 +548,10 @@ footer p{max-width:var(--measure)}
         \(F_\text{back}=F(U_+)\). That gives three regimes:
       </p>
       <ul class="params">
-        <li>\(\lambda_1 &lt; 0.25\): \(F_\text{back} &lt; 0\). A lone rib stays buckled after release. In the chain it still returns, because
-          the buckled well sits higher in energy than the rest well (\(\Pi = 0.19\) vs \(0\) at \(\lambda_1 = 0.1\)), so the rest state
-          spreads back in from unbuckled neighbours or the ends as a slow front.</li>
+        <li>\(\lambda_1 &lt; 0.25\): \(F_\text{back} &lt; 0\). Released slowly, a rib stays buckled. That state is only metastable,
+          though: at \(\lambda_1 = 0.1\) the buckled well sits higher than the rest well (\(\Pi = 0.19\) vs \(0\)) behind a barrier of
+          just \(0.12\). In the full dynamic model, a fast release or the undamped body resonator still ringing after the snap
+          (through the \(\lambda_2 V\) term) can knock the rib back over it.</li>
         <li>\(0.25 &lt; \lambda_1 &lt; 1\): \(0 &lt; F_\text{back} &lt; F_\text{in}\). Pull to snap, release to snap back: every rib loses its
           buckled well as the pull fades, so they all return almost together.</li>
         <li>\(\lambda_1 &gt; 1\): no peak or dip, so the rib bends smoothly and never snaps.</li>
