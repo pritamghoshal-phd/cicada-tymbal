@@ -160,6 +160,10 @@ figcaption{font-size:.88rem; color:var(--muted); margin-top:.6rem; line-height:1
 details.curious ul.params{padding-left:1.2rem; margin:0 0 1rem}
 details.curious ul.params li{margin:.25rem 0}
 .parthead{font-size:1.45rem; margin:3rem 0 .8rem; max-width:var(--measure)}
+.forces{padding-left:1.3rem; margin:0 0 1rem}
+.forces li{margin:.45rem 0}
+.refs{font-size:.88rem; color:var(--muted); max-width:820px; padding-left:1.3rem; margin:0}
+.refs li{margin:.25rem 0; line-height:1.45}
 #dr-svg, #fr-svg{display:block; width:100%; height:auto}
 #dr-svg .axis, #fr-svg .axis{stroke:var(--muted); stroke-width:1; fill:none}
 #dr-svg .grid{stroke:var(--line); stroke-width:1}
@@ -504,22 +508,49 @@ footer p{max-width:var(--measure)}
 <section id="actuation">
   <div class="prose">
     <p class="kicker">Beyond the paper · work in progress</p>
-    <h2>Pulling the trigger: the muscle</h2>
+    <h2>Pulling the trigger: muscle, spring and the tilted landscape</h2>
     <p class="lede">
-      The model in the paper describes the tymbal and the body. It starts each click with a single kick to the first rib. A real cicada
-      does something different: a muscle pulls steadily on the tymbal, then lets go.
+      The model in the paper describes the tymbal and the body, and starts each click with a single kick to the first rib. A real cicada
+      has a muscle on one side of the tymbal and a spring on the other. This section puts both into the picture.
+    </p>
+
+    <h3>What the cicada actually does</h3>
+    <p>
+      Decades of work on the Australian cicada <em>Cyclochila australasiae</em> by Bennet-Clark, Young and colleagues describe the cycle. A fast
+      muscle inside the abdomen twitches once per click. Through a tendon-like rod, the apodeme, it pulls on a stiff plate at the edge of the
+      tymbal; the plate works as a lever, so the tymbal surface moves more than twice as far as the muscle shortens. As the pull rises, the long
+      ribs buckle inward <em>one after another</em>, from the back of the tymbal to the front, and each buckling makes a sound pulse. When the
+      muscle relaxes nothing pulls the tymbal back: a thick pad of resilin, a rubbery protein, acts as the return spring and pops it out again.
+      That outward click is far quieter, by more than 20 dB, and much faster. In the periodical cicada <em>Magicicada</em> the inward movement
+      takes several milliseconds and the return well under one; in our own high-speed video of <em>Neotibicen canicularis</em> the ribs buckle
+      over about 3 ms and pop back in about 0.2 ms.
     </p>
     <p>
-      Picture a rib's two shapes as two valleys with a hill between them, and the rib as a ball resting in the first valley. Pulling on
-      the rib tilts the whole landscape. Pull a little and the ball just shifts. Pull harder and, at a tipping point, the first valley
-      flattens out and vanishes. The ball has nowhere to go but over the hill: that is the snap.
+      The energy budget has been measured too. In <em>Cyclochila</em> each muscle twitch does roughly 47 µJ of work; the ribs give way at a pull
+      of about 0.4 N and release about 45 µJ in three or four steps as successive ribs buckle; and 13–30 µJ of that leaves as sound, a
+      mechanical-to-acoustic efficiency of 18–46%, remarkable for any sound source. A second, slower muscle can pre-tension the tymbal and so
+      change the pull needed to make it buckle, switching the insect between loud and soft clicks.
     </p>
+
+    <h3>What the pull does to a rib</h3>
     <p>
-      When the muscle lets go, the landscape tilts back, and what happens next depends on the rib. If the second valley is still there with
-      no pull at all, a rib that is let go gently stays in it, like a jar lid stuck inside out. But the hill it has to climb to get home is
-      low, so a jolt can knock it back: a sudden release, or the body still ringing from the snap. If that valley only exists while the rib
-      is being pulled, the rib rolls home by itself the moment the pull fades, jolt or no jolt. Real tymbals spring back on their own when the muscle relaxes; which kind of rib
-      they have is one of the questions we are exploring. The plot below shows a single rib. Try both kinds.
+      Picture a rib's two shapes as two valleys with a hill between them, and the rib as a ball in the first valley. Pulling on the rib tilts
+      the whole landscape. Three forces matter as the tilt grows:
+    </p>
+    <ol class="forces">
+      <li><b>The valleys level out.</b> At a pull equal to the rib stiffness number λ₁ (exactly, in this model) the two valleys sit at the same
+        height. Below this the resting shape has the lower energy; above it the buckled shape does.</li>
+      <li><b>The ball can be pushed over.</b> Between this force and the next, a rib on its own stays put, but a rib whose neighbour has already
+        buckled is dragged over the hill, and the buckling spreads along the row like dominoes. This is the window in which a buckling
+        <em>wave</em> can exist.</li>
+      <li><b>The first valley vanishes.</b> At the snap-in force the hill flattens out and every rib snaps, whether or not its neighbours have.</li>
+    </ol>
+    <p>
+      Letting go tilts the landscape back. If the rib is of the kind whose buckled valley exists only under load (λ₁ between 0.25 and 1), it
+      rolls home by itself. If the buckled valley survives (λ₁ below 0.25), a rib on its own stays there, like a jar lid stuck inside out. But the
+      resting valley is now the lower one, so the moment any rib is knocked back, by a jolt, by the body still ringing, or at the tymbal's edge,
+      its neighbours follow and an unbuckling wave runs along the row on its own. Either way the return needs no muscle. It is paid for by the
+      elastic energy the pull stored, which is exactly the job the resilin pad does in the insect. The plot below shows a single rib; try both kinds.
     </p>
   </div>
 
@@ -528,7 +559,7 @@ footer p{max-width:var(--measure)}
       <div class="sl">
         <label for="ac-F"><span>Muscle pull, <i>F</i></span><output id="ac-Fo"></output></label>
         <input type="range" id="ac-F" min="0" max="1" step="0.005" value="0">
-        <small>Drag slowly to the right, then back to zero.</small>
+        <small>Drag slowly to the right, then back to zero. Watch the valleys level out at F = λ₁ before the rib snaps.</small>
       </div>
       <div class="sl">
         <label for="ac-l1">Rib stiffness, λ₁<output id="ac-l1o"></output></label>
@@ -550,38 +581,42 @@ footer p{max-width:var(--measure)}
 
   <div class="prose">
     <details class="curious">
-      <summary>For the curious: adding the muscle to the equations</summary>
+      <summary>For the curious: the muscle in the equations, and energy versus entropy</summary>
       <p>
-        The tymbal equation above has no forcing; the paper sets the motion going with an initial displacement of the first rib. The muscle
-        can enter as a force on the right-hand side,
+        The tymbal equation has no forcing; the paper sets the motion going with an initial displacement of the first rib. The muscle can
+        enter as a force on the right-hand side,
       </p>
       <div class="eq">\[\frac{\partial^2 U}{\partial T^2}+\zeta\frac{\partial U}{\partial T}+U^3-3U^2+(\lambda_1+\lambda_2+2)U-R_1\frac{\partial^2 U}{\partial X^2}-\lambda_2 V=F(T)\,g(X)\]</div>
       <p>
-        where \(F(T)\) is the muscle's pull over one twitch (ramp up, hold, release) and \(g(X)\) describes how the apodeme's pull spreads
-        along the membrane, for example \(g(X)=e^{-X/\ell}\), largest at the rear of the tymbal where the muscle attaches.
+        where \(F(T)\) is the pull over one twitch (ramp up, hold, release) and \(g(X)\) describes how the apodeme's pull spreads along the
+        membrane, largest at the rear where it attaches. For a slow pull with the body keeping up (\(V=U\)) a rib sits where the force balances,
+        \(F = U^3-3U^2+(\lambda_1+2)U\), and the tilted energy is \(\Pi_F(U)=\Pi(U)-FU\). Three forces follow from it:
+      </p>
+      <div class="eq">\[F_\text{level}=\lambda_1,\qquad F_\text{in}=F(U_-),\qquad F_\text{back}=F(U_+)\]</div>
+      <div class="eq">\[U_\pm = 1 \pm \sqrt{1-\tfrac{\lambda_1+2}{3}}\]</div>
+      <p>
+        The first is new here and exact: at \(F=\lambda_1\) the energy can be written \(\Pi_F = W^2+\lambda_1 W\) with \(W=U(U-2)/2\), so the two
+        valleys, at \(U=1\mp\sqrt{1-\lambda_1}\), are equally deep. \(F_\text{in}\) is the fold where the resting valley disappears and
+        \(F_\text{back}\) the fold where the buckled valley disappears; \(F_\text{back}&lt;0\) for \(\lambda_1&lt;0.25\), which is the
+        "stays buckled on release" case. At \(\lambda_1=0.1\) the three are \(0.10\), \(0.43\) and \(-0.23\). A snap-through of this
+        kind, a valley vanishing at a fold as a load is raised, is the standard limit-point instability of a shallow arch or von Mises truss,
+        and the slowing-down near the fold that Gomez, Moulton and Vella described is one more reason the inward motion is slower than
+        the return.
       </p>
       <p>
-        For a slow pull on one rib, with the body keeping up (\(V=U\)), the rib sits where the force balances:
-        \(F = U^3-3U^2+(\lambda_1+2)U\). That curve has a peak and a dip at
+        <b>Energy, not entropy.</b> Is the transition "entropically" feasible? The question does not arise at this scale. The energies involved
+        are microjoules; thermal energy at room temperature is \(k_BT\approx 4\times10^{-21}\) J, so a rib's barrier is of order \(10^{16}\,k_BT\)
+        and the chance of a rib snapping by itself through thermal fluctuation is zero on any timescale (thermally activated snap-through is
+        seen only in nanoscale structures). The tymbal is deterministic mechanics: a rib buckles when, and only when, the pull makes it. Where
+        irreversibility does enter is dissipation. The damping \(\zeta\) and the viscoelastic resilin turn part of the stored energy into heat
+        each cycle, which is why the cycle is one-way: the muscle must recharge the ribs for every click, just as the elements of an engineered
+        bistable chain must be reset by external work after a stored-energy wave has run through them.
       </p>
-      <div class="eq">\[U_\pm = 1 \pm \sqrt{1-\frac{\lambda_1+2}{3}}\]</div>
-      <p>
-        The rib snaps in when \(F\) passes the peak, \(F_\text{in}=F(U_-)\), and snaps back when \(F\) falls below the dip,
-        \(F_\text{back}=F(U_+)\). That gives three regimes:
-      </p>
-      <ul class="params">
-        <li>\(\lambda_1 &lt; 0.25\): \(F_\text{back} &lt; 0\). Released slowly, a rib stays buckled. That state is only metastable,
-          though: at \(\lambda_1 = 0.1\) the buckled well sits higher than the rest well (\(\Pi = 0.19\) vs \(0\)) behind a barrier of
-          just \(0.12\). In the full dynamic model, a fast release or the undamped body resonator still ringing after the snap
-          (through the \(\lambda_2 V\) term) can knock the rib back over it.</li>
-        <li>\(0.25 &lt; \lambda_1 &lt; 1\): \(0 &lt; F_\text{back} &lt; F_\text{in}\). Pull to snap, release to snap back: every rib loses its
-          buckled well as the pull fades, so they all return almost together.</li>
-        <li>\(\lambda_1 &gt; 1\): no peak or dip, so the rib bends smoothly and never snaps.</li>
-      </ul>
       <p class="params">
-        Next steps we are exploring: treating the muscle and apodeme as a spring in series with the rib (which decides whether the muscle
-        acts like a force or a position control, and how much energy the snap stores and releases), a muscle force that drops when the rib
-        moves faster than the muscle can shorten, and trains of twitches at the firing rate to build up whole calls.
+        Open questions we are working on: whether real ribs are the stays-buckled kind or the returns-by-itself kind (an indentation test on an
+        excised tymbal would give \(\lambda_1\) directly from the ratio of snap-in to snap-back force); whether the ribs have graded thresholds, as
+        the three-to-four-step release measured in <em>Cyclochila</em> suggests; treating muscle and apodeme as a spring in series with the rib,
+        which decides whether the muscle acts as a force or a position control; and trains of twitches at the firing rate to build whole calls.
       </p>
     </details>
   </div>
@@ -649,7 +684,8 @@ footer p{max-width:var(--measure)}
       wavelength, only certain pitches can travel. Plotting allowed pitch against wavelength gives the <em>dispersion relation</em>.
       Because the model has two coupled rows, the ribs and the body, there are two curves. Below the lower curve there is nothing at all:
       no ripple of any wavelength can carry a pitch that low. That empty strip is the band gap, and it is why so little of the cicada's
-      song sits at low frequencies.
+      song sits at low frequencies. The resonator row is the model's stand-in for the abdominal air sac, which Bennet-Clark and Young
+      described in 1992 as a Helmholtz resonator driven by the tymbal click; the chain abstracts that single cavity into a tunable row.
     </p>
   </div>
   <div class="act">
@@ -702,59 +738,76 @@ footer p{max-width:var(--measure)}
     </details>
   </div>
 
-  <h3 class="parthead">2. How a snap travels: the buckling front</h3>
+  <h3 class="parthead">2. How a snap travels: transition waves</h3>
   <div class="prose">
     <p>
-      When ribs snap one after another, the boundary between snapped and unsnapped ribs runs along the chain like a falling line of
-      dominoes. For this chain, the shape and speed of that boundary can be worked out exactly. Below, the dots are a live simulation of
+      When ribs snap one after another, the boundary between snapped and unsnapped ribs runs along the chain like a falling line of dominoes.
+      In the physics of bistable chains this is a <em>transition wave</em>, and its behaviour has been worked out both in engineered chains of
+      buckled beams (Nadkarni, Raney, Kochmann, Daraio and colleagues) and, exactly, for this model. Below, the dots are a live simulation of
       the ribs and the line is the exact formula drawn on top.
     </p>
     <p>
-      There is a surprise. Left to itself, the boundary always moves so that the <em>unsnapped</em> region grows. The snapped shape stores
-      a little more energy than the resting one, so given a free path the chain unsnaps, and with little damping it does so close to
-      the chain's speed of sound. A buckling wave, by contrast, has to be pushed along, by the muscle or by the first kick. That is
-      consistent with what the high-speed camera sees: a slower forward wave of buckling, then a much faster wave of unbuckling.
+      The rule is simple: left to itself, a front only ever moves so that the <em>lower-energy</em> state grows. With no pull the snapped shape
+      stores more energy than the resting one, so the chain unsnaps on its own, at a speed set by that energy difference, the damping and the
+      stiffness between ribs, and with little damping close to the chain's speed of sound. A front the other way, into the higher-energy state,
+      falls apart; engineered chains with this property work as mechanical diodes. Now add the muscle. A pull above λ₁ tilts the landscape until
+      the snapped shape is the lower one, and the same front runs the other way: that is the buckling wave. Pull exactly λ₁ and it stands still.
+      Slide the muscle pull across λ₁ below and watch the front reverse.
+    </p>
+    <p>
+      This explains why buckling must be driven and unbuckling comes free, but not, by itself, why the return is more than ten times faster. The
+      speed of a free front depends on how far the pull is from λ₁, and a twelve-fold ratio needs the muscle to pull only about one per cent above
+      the level point, which looks fine-tuned. The biology suggests a simpler reading. Bennet-Clark and Daws measured the ribs of
+      <em>Cyclochila</em> giving way in three or four distinct steps over 2–10 ms as the muscle's pull rose: ribs of different stiffness, each
+      snapping when the rising pull crosses its own threshold, paced by the muscle rather than by a wave. The return, on the other hand, is a
+      genuine transition wave powered by stored energy, which is why it is so fast. Our model, with identical ribs, cannot yet tell the two apart.
+      Ribs with graded thresholds are the next thing to add.
     </p>
   </div>
   <div class="act">
     <div class="sliders">
-      <div class="sl"><label for="fr-l1"><span>Rib stiffness, λ₁</span><output id="fr-l1o"></output></label><input type="range" id="fr-l1" min="0" max="0.24" step="0.005" value="0.1"><small>At zero, both shapes store the same energy and the front stands still.</small></div>
+      <div class="sl"><label for="fr-F"><span>Muscle pull, <i>F</i></span><output id="fr-Fo"></output></label><input type="range" id="fr-F" min="0" max="0.7" step="0.005" value="0"><small>Below λ₁ the chain unsnaps; above it the snap spreads. Past the snap-in force there is no front: every rib snaps alone.</small></div>
+      <div class="sl"><label for="fr-l1"><span>Rib stiffness, λ₁</span><output id="fr-l1o"></output></label><input type="range" id="fr-l1" min="0" max="0.6" step="0.01" value="0.1"><small>At zero, with no pull, both shapes store the same energy and the front stands still.</small></div>
       <div class="sl"><label for="fr-z"><span>Damping, ζ</span><output id="fr-zo"></output></label><input type="range" id="fr-z" min="0.05" max="1.5" step="0.01" value="0.3"><small>Less damping: a faster, sharper front.</small></div>
       <div class="sl"><label for="fr-R1"><span>Rib-to-rib coupling, R̃₁</span><output id="fr-R1o"></output></label><input type="range" id="fr-R1" min="2" max="40" step="0.5" value="15"></div>
       <div class="playbtns"><button class="btn" id="fr-restart" type="button">Restart</button></div>
       <p class="readout" id="fr-read"></p>
     </div>
     <div class="plot">
-      <h3>Rib displacement along the chain (tymbal on its own)</h3>
-      <svg id="fr-svg" viewBox="0 0 480 240" role="img" aria-label="Displacement of each rib along the chain: unsnapped ribs on the left, snapped ribs on the right, with the boundary moving to the right as the unsnapped region grows."></svg>
+      <h3>Rib displacement along the chain (tymbal on its own, under a steady pull)</h3>
+      <svg id="fr-svg" viewBox="0 0 480 240" role="img" aria-label="Displacement of each rib along the chain: resting ribs on the left, snapped ribs on the right, with the boundary moving right when the pull is below lambda one and left when it is above."></svg>
       <div class="legend"><span><i style="background:var(--ink)"></i>rib, simulated</span><span><i style="background:var(--vein)"></i>exact formula</span><span><i style="background:var(--accent)"></i>snapped</span></div>
     </div>
   </div>
   <div class="prose">
     <details class="curious">
-      <summary>For the curious: the exact front</summary>
+      <summary>For the curious: the exact front, and when it pins</summary>
       <p>
-        Take the tymbal chain on its own (\(\lambda_2=0\)) and long enough that its ends don't matter. Writing the restoring force as
-        \(U(U-U_m)(U-U_b)\), with the hilltop and buckled states
+        Take the tymbal chain on its own (\(\lambda_2=0\)), long enough that its ends don't matter, under a steady pull \(F\). The restoring force
+        is \((U-r_0)(U-r_1)(U-r_2)\), where \(r_0&lt;r_1&lt;r_2\) are the three roots of \(U^3-3U^2+(\lambda_1+2)U-F\): the resting valley, the hill
+        and the buckled valley of the tilted landscape. A front joining the two valleys is
       </p>
-      <div class="eq">\[U_{m,b}=\frac{3\mp\sqrt{1-4\lambda_1}}{2}\]</div>
-      <p>a front that joins rest (\(U=0\)) to the buckled state is</p>
-      <div class="eq">\[U(X,T)=\frac{U_b}{1+e^{-(X-cT)/w}}\]</div>
-      <p>moving at speed \(c\) with width \(w\):</p>
-      <div class="eq">\[c=\frac{(2U_m-U_b)\sqrt{R_1}}{\sqrt{2\zeta^2+(2U_m-U_b)^2}},\qquad w=\frac{\sqrt{2(R_1-c^2)}}{U_b}\]</div>
+      <div class="eq">\[U(X,T)=r_0+\frac{r_2-r_0}{1+e^{-(X-cT)/w}}\]</div>
+      <p>moving at speed \(c\) with width \(w\), where \(\delta = 2r_1-r_0-r_2\) measures the asymmetry of the landscape:</p>
+      <div class="eq">\[c=\frac{\delta\sqrt{R_1}}{\sqrt{2\zeta^2+\delta^2}},\qquad w=\frac{\sqrt{2(R_1-c^2)}}{r_2-r_0},\qquad \Pi_F(r_2)-\Pi_F(r_0)=\frac{(r_2-r_0)^3\,\delta}{12}\]</div>
       <p>
-        It solves the continuum equation exactly. The direction is set by the energy difference between the two valleys,
+        It solves the continuum equation exactly, and the discrete chain follows it to within a few per cent until the front is narrower than a
+        rib. Positive \(c\) means the resting state grows. With no pull \(r_0=0\) and \(\delta=2U_m-U_b&gt;0\) for every \(\lambda_1&gt;0\): the
+        chain unsnaps. The sign of \(\delta\) flips exactly at \(F=\lambda_1\), where the valleys are level and the front stops; above it the
+        snap spreads. Near the level point \(c\approx\delta\sqrt{R_1}/(\sqrt2\,\zeta)\), proportional to the energy difference and inversely
+        to the damping, the "universal energy transport law" of Nadkarni and co-workers for dissipative transition waves; far from it the speed
+        saturates at the speed of sound \(\sqrt{R_1}\).
       </p>
-      <div class="eq">\[\Pi(U_b)-\Pi(0)=\frac{U_b^3\,(2U_m-U_b)}{12}\]</div>
       <p>
-        which is positive for every \(\lambda_1&gt;0\): the buckled valley sits higher, so \(c&gt;0\) and the resting state invades. At
-        \(\lambda_1=0\) the valleys are level and \(c=0\). The speed can never exceed \(\sqrt{R_1}\), the chain's speed of sound (the
-        fastest any disturbance travels in the continuum equation), and as it approaches that limit the front gets narrower. Once \(w\) drops to about one rib, the continuum picture starts to fail and the
-        simulated front runs a few per cent slower than the formula; you can see this by turning the damping right down.
+        Two effects the continuum formula misses. First, a chain of discrete ribs can <em>pin</em>: close to the level point the energy bias may be
+        too small to carry the front over the hill from one rib to the next, so it stops dead over a finite range of \(F\) (Keener 1987; Carpio
+        and Bonilla 2003). With the couplings used here (\(R_1\ge2\), fronts at least half a rib wide) we found no pinning, but with ribs much
+        stiffer than their coupling it would appear and would let a tymbal sit partly buckled. Second, near the snap-in force the dynamics slows
+        down in the ghost of the vanished valley (Gomez, Moulton and Vella 2017), which stretches the forward motion but not the return.
       </p>
       <p class="params">
-        The travelling wave in the Supplementary Information (Eq. S19) is a different front: it joins the hilltop state \(U_m\) to the
-        buckled state \(U_b\), rather than rest to buckled.
+        The travelling wave in the Supplementary Information (Eq. S19) is a different front: it joins the hilltop state \(U_m\) to the buckled
+        state \(U_b\), rather than one valley to the other.
       </p>
     </details>
   </div>
@@ -762,7 +815,9 @@ footer p{max-width:var(--measure)}
   <h3 class="parthead">3. What the six numbers mean</h3>
   <div class="prose">
     <p>
-      Every slider on this page is one of six numbers that come from the real parts of the model: masses, springs and a damper. Scaling
+      Every slider on this page is one of six numbers that come from the real parts of the model: masses, springs and a damper. Lengths
+      are measured in units of the truss rise \(\alpha_0 w_0\) and time in units of \(1/\omega_n\), with \(\omega_n=\alpha_0\sqrt{k/m}\)
+      the rate at which a rib would vibrate on its own, so the displacements \(U\), \(V\) and the time \(T\) are pure numbers. Scaling
       them this way means one set of equations covers every species; only the numbers change.
     </p>
   </div>
@@ -794,6 +849,24 @@ footer p{max-width:var(--measure)}
         \(1/\omega_n\), with \(\omega_n=\alpha_0\sqrt{k/m}\), gives the tymbal equation above.
       </p>
     </details>
+  </div>
+
+  <div class="prose">
+    <h3 class="parthead" style="font-size:1.15rem">Sources for this section</h3>
+    <ol class="refs">
+      <li>Young, D. &amp; Bennet-Clark, H. C. The role of the tymbal in cicada sound production. <em>J. Exp. Biol.</em> 198, 1001–1020 (1995).</li>
+      <li>Bennet-Clark, H. C. Tymbal mechanics and the control of song frequency in the cicada <em>Cyclochila australasiae</em>. <em>J. Exp. Biol.</em> 200, 1681–1694 (1997).</li>
+      <li>Bennet-Clark, H. C. &amp; Daws, A. G. Transduction of mechanical energy into sound energy in the cicada <em>Cyclochila australasiae</em>. <em>J. Exp. Biol.</em> 202, 1803–1817 (1999).</li>
+      <li>Fonseca, P. J. &amp; Hennig, R. M. Phasic action of the tensor muscle modulates the calling song in cicadas. <em>J. Exp. Biol.</em> 199, 1535–1544 (1996).</li>
+      <li>Fonseca, P. J. &amp; Bennet-Clark, H. C. Asymmetry of tymbal action and structure in a cicada. <em>J. Exp. Biol.</em> 201, 717–730 (1998).</li>
+      <li>Bennet-Clark, H. C. &amp; Young, D. A model of the mechanism of sound production in cicadas. <em>J. Exp. Biol.</em> 173, 123–153 (1992).</li>
+      <li>Josephson, R. K. &amp; Young, D. A synchronous insect muscle with an operating frequency greater than 500 Hz. <em>J. Exp. Biol.</em> 118, 185–208 (1985).</li>
+      <li>Nadkarni, N., Arrieta, A. F., Chong, C., Kochmann, D. M. &amp; Daraio, C. Unidirectional transition waves in bistable lattices. <em>Phys. Rev. Lett.</em> 116, 244501 (2016).</li>
+      <li>Nadkarni, N., Daraio, C., Abeyaratne, R. &amp; Kochmann, D. M. Universal energy transport law for dissipative and diffusive phase transitions. <em>Phys. Rev. B</em> 93, 104109 (2016).</li>
+      <li>Raney, J. R. et al. Stable propagation of mechanical signals in soft media using stored elastic energy. <em>Proc. Natl Acad. Sci. USA</em> 113, 9722–9727 (2016).</li>
+      <li>Gomez, M., Moulton, D. E. &amp; Vella, D. Critical slowing down in purely elastic "snap-through" instabilities. <em>Nat. Phys.</em> 13, 142–145 (2017).</li>
+      <li>Keener, J. P. Propagation and its failure in coupled systems of discrete excitable cells. <em>SIAM J. Appl. Math.</em> 47, 556–572 (1987); Carpio, A. &amp; Bonilla, L. L. Depinning transitions in discrete reaction–diffusion equations. <em>SIAM J. Appl. Math.</em> 63, 1056–1082 (2003).</li>
+    </ol>
   </div>
 </section>
 
@@ -1394,7 +1467,7 @@ footer p{max-width:var(--measure)}
     $("ac-Fo").textContent = F.toFixed(2); $("ac-l1o").textContent = l1.toFixed(2);
     const fo = fold(l1);
     $("ac-read").innerHTML = `<span>Rib is</span><b>${U > 1 ? "buckled" : "at rest"}</b>` +
-      (fo ? `<span>Snaps in at</span><b>F = ${fo[0].toFixed(2)}</b><span>Snaps back at</span><b>${fo[1] < 0 ? "not on its own (F = "+fo[1].toFixed(2)+")" : "F = "+fo[1].toFixed(2)}</b>`
+      (fo ? `<span>Valleys level at</span><b>F = λ₁ = ${l1.toFixed(2)}</b><span>Snaps in at</span><b>F = ${fo[0].toFixed(2)}</b><span>Snaps back at</span><b>${fo[1] < 0 ? "not on its own (F = "+fo[1].toFixed(2)+")" : "F = "+fo[1].toFixed(2)}</b>`
           : `<span>Snaps</span><b>never: it just bends</b>`);
   }
   // Overdamped roll toward the nearest valley; the snap shows as a quick roll over the vanished hill
@@ -1472,52 +1545,64 @@ footer p{max-width:var(--measure)}
   ["dr-R1","dr-R2","dr-l1","dr-l2","dr-M","dr-cont"].forEach(id => $(id).addEventListener("input", drawDR));
   drawDR();
 
-  /* ---------- 2. Buckling front: discrete chain vs exact formula ---------- */
-  const F = $("fr-svg"), FX0 = 20, FX1 = 470, FY0 = 18, FY1 = 200, NR = 150;
+  /* ---------- 2. Transition front under a steady pull: discrete chain vs exact formula ---------- */
+  const F = $("fr-svg"), FX0 = 20, FX1 = 470, FY0 = 18, FY1 = 200, NR = 150, UMIN = -0.5, UMAX = 2.7;
   mk(F, "path", {d:`M${FX0},${FY1} H${FX1}`, class:"axis"});
   mk(F, "text", {x:FX0, y:FY1+20}).textContent = "ribs →";
-  const lvlB = mk(F, "line", {x1:FX0, x2:FX1, class:"lvl"});
-  mk(F, "text", {x:FX0, y:FY1-6}).textContent = "rest";
-  const lvlT = mk(F, "text", {x:FX0});
+  const lvlB = mk(F, "line", {x1:FX0, x2:FX1, class:"lvl"}), lvlR = mk(F, "line", {x1:FX0, x2:FX1, class:"lvl"});
+  const lblR = mk(F, "text", {x:FX0}), lblB = mk(F, "text", {x:FX0});
   const formula = mk(F, "path", {class:"formula"});
+  const note = mk(F, "text", {x:(FX0+FX1)/2, y:(FY0+FY1)/2, "text-anchor":"middle", class:"gl"});
   const dots = []; for (let j=0;j<NR;j++) dots.push(mk(F, "circle", {r:2.6, class:"rib"}));
+  // the three roots of the tilted cubic U^3 - 3U^2 + (l1+2)U - F: rest valley, hill, buckled valley
+  function roots3(l1, Fp){
+    const f = u => u*u*u - 3*u*u + (l1+2)*u - Fp, out = []; let prev = f(-1);
+    for (let i=1;i<=600;i++){
+      const u = -1 + 4.5*i/600, v = f(u);
+      if ((prev<0) !== (v<0)){ let a = u - 4.5/600, b = u; for (let k=0;k<40;k++){ const m=(a+b)/2; if ((f(m)<0)===(f(a)<0)) a=m; else b=m; } out.push((a+b)/2); }
+      prev = v;
+    }
+    return out;
+  }
   const front = p => {
-    const s = Math.sqrt(1-4*p.l1), a = (3-s)/2, b = (3+s)/2, d = 2*a-b;
-    const c = d*Math.sqrt(p.R1)/Math.sqrt(2*p.z*p.z + d*d), w = Math.sqrt(2*(p.R1-c*c))/b;
-    return {b, c, w, dE: b**3*d/12};
+    const r = roots3(p.l1, p.F); if (r.length < 3) return {r};
+    const d = 2*r[1]-r[0]-r[2], c = d*Math.sqrt(p.R1)/Math.sqrt(2*p.z*p.z + d*d);   // + : resting state grows
+    return {r, r0:r[0], r2:r[2], c, w:Math.sqrt(2*(p.R1-c*c))/(r[2]-r[0]), dE:(r[2]-r[0])**3*d/12};
   };
   let st = null, raf = null;
   function restart(){
-    const p = {l1:+$("fr-l1").value, z:+$("fr-z").value, R1:+$("fr-R1").value};
-    ["l1","z","R1"].forEach(k => $(`fr-${k}o`).textContent = (+$(`fr-${k}`).value).toFixed(k==="R1"?1:2));
-    const fr = front(p), x0 = 25, U = new Float64Array(NR), V = new Float64Array(NR);
-    for (let j=0;j<NR;j++){ const e = Math.exp(-(j-x0)/fr.w); U[j] = fr.b/(1+e); V[j] = -fr.c*U[j]*(1-U[j]/fr.b)/fr.w; }
+    const p = {F:+$("fr-F").value, l1:+$("fr-l1").value, z:+$("fr-z").value, R1:+$("fr-R1").value};
+    ["F","l1","z","R1"].forEach(k => $(`fr-${k}o`).textContent = (+$(`fr-${k}`).value).toFixed(k==="R1"?1:k==="F"?3:2));
+    const fr = front(p), x0 = NR/2, U = new Float64Array(NR), V = new Float64Array(NR);
+    if (fr.c === undefined){ U.fill(fr.r[0]); }
+    else for (let j=0;j<NR;j++){ const e = Math.exp(-(j-x0)/fr.w); U[j] = fr.r0 + (fr.r2-fr.r0)/(1+e); V[j] = -fr.c*(U[j]-fr.r0)*(fr.r2-U[j])/((fr.r2-fr.r0)*fr.w); }
     st = {p, fr, x0, U, V, T:0, track:[]};
   }
-  const ysF = (u, b) => FY1 - (FY1-FY0)*u/(b*1.08);
+  const ysF = u => FY1 - (FY1-FY0)*(u-UMIN)/(UMAX-UMIN);
   function drawF(){
     const {U, fr, x0, T} = st, xs = j => FX0 + (FX1-FX0)*j/(NR-1);
-    lvlB.setAttribute("y1", ysF(fr.b, fr.b)); lvlB.setAttribute("y2", ysF(fr.b, fr.b));
-    lvlT.setAttribute("y", ysF(fr.b, fr.b)-6); lvlT.textContent = "snapped";
-    let d = ""; for (let i=0;i<=300;i++){ const x = (NR-1)*i/300; d += (i?"L":"M")+xs(x).toFixed(1)+","+ysF(fr.b/(1+Math.exp(-(x-x0-fr.c*T)/fr.w)), fr.b).toFixed(1); }
+    dots.forEach((c,j)=>{ c.setAttribute("cx", xs(j)); c.setAttribute("cy", ysF(U[j])); c.classList.toggle("on", fr.c !== undefined ? U[j] > (fr.r0+fr.r2)/2 : U[j] > 1); });
+    if (fr.c === undefined){ formula.setAttribute("d",""); [lvlB,lvlR].forEach(l=>{l.setAttribute("y1",-10);l.setAttribute("y2",-10);}); lblR.textContent = lblB.textContent = ""; note.textContent = "No front: under this pull every rib has only one shape"; return; }
+    note.textContent = "";
+    [[lvlR,lblR,fr.r0,"rest"],[lvlB,lblB,fr.r2,"snapped"]].forEach(([l,t,u,name])=>{ l.setAttribute("y1", ysF(u)); l.setAttribute("y2", ysF(u)); t.setAttribute("y", ysF(u)-6); t.textContent = name; });
+    let d = ""; for (let i=0;i<=300;i++){ const x = (NR-1)*i/300; d += (i?"L":"M")+xs(x).toFixed(1)+","+ysF(fr.r0 + (fr.r2-fr.r0)/(1+Math.exp(-(x-x0-fr.c*T)/fr.w))).toFixed(1); }
     formula.setAttribute("d", d);
-    dots.forEach((c,j)=>{ c.setAttribute("cx", xs(j)); c.setAttribute("cy", ysF(U[j], fr.b)); c.classList.toggle("on", U[j] > fr.b/2); });
   }
-  function frontPos(){                       // where the simulated chain crosses half height
-    const {U, fr} = st; for (let j=1;j<NR;j++) if (U[j] > fr.b/2 && U[j-1] <= fr.b/2) return j-1 + (fr.b/2-U[j-1])/(U[j]-U[j-1]);
+  function frontPos(){                       // where the simulated chain crosses the mid level
+    const {U, fr} = st, mid = (fr.r0+fr.r2)/2; for (let j=1;j<NR;j++) if (U[j] > mid && U[j-1] <= mid) return j-1 + (mid-U[j-1])/(U[j]-U[j-1]);
     return null;
   }
   function tick(){
-    const {p, U, V} = st, k = p.l1 + 2, dt = 0.01;
+    const {p, U, V, fr} = st, k = p.l1 + 2, dt = 0.01;
     for (let n=0;n<5;n++){
       for (let j=0;j<NR;j++){
         const ul = U[j>0?j-1:0], ur = U[j<NR-1?j+1:NR-1], u = U[j];
-        V[j] += (-p.z*V[j] - (u*u*u - 3*u*u + k*u) + p.R1*(ul - 2*u + ur))*dt;
+        V[j] += (-p.z*V[j] - (u*u*u - 3*u*u + k*u) + p.R1*(ul - 2*u + ur) + p.F)*dt;
       }
       for (let j=0;j<NR;j++) U[j] += V[j]*dt;
       st.T += dt;
     }
-    const x = frontPos(); if (x !== null) st.track.push([st.T, x]);
+    const x = fr.c === undefined ? null : frontPos(); if (x !== null) st.track.push([st.T, x]);
     if (st.track.length > 400) st.track.shift();
     drawF();
     let cs = null;
@@ -1525,18 +1610,19 @@ footer p{max-width:var(--measure)}
       const t = st.track, m = t.length, sx = t.reduce((a,v)=>a+v[0],0)/m, sy = t.reduce((a,v)=>a+v[1],0)/m;
       cs = t.reduce((a,v)=>a+(v[0]-sx)*(v[1]-sy),0) / t.reduce((a,v)=>a+(v[0]-sx)**2,0);
     }
-    const fr = st.fr;
-    $("fr-read").innerHTML =
-      `<span>Front speed, formula</span><b>${fr.c.toFixed(2)} ribs per unit time</b>` +
-      `<span>Front speed, simulated</span><b>${cs === null ? "…" : cs.toFixed(2)+" ribs per unit time"}</b>` +
+    const lvl = `<span>Valleys level at</span><b>F = λ₁ = ${p.l1.toFixed(2)}</b>`;
+    $("fr-read").innerHTML = fr.c === undefined ? lvl + `<span>This pull</span><b>${p.F < p.l1 ? "below the snap-back fold: only the resting shape exists" : "above the snap-in fold: only the snapped shape exists"}</b>` :
+      lvl +
+      `<span>Energy, snapped minus rest</span><b>${fr.dE >= 0 ? "+" : ""}${fr.dE.toFixed(3)}</b>` +
+      `<span>Front speed, formula</span><b>${Math.abs(fr.c).toFixed(2)} ribs per unit time</b>` +
+      `<span>Front speed, simulated</span><b>${cs === null ? "…" : Math.abs(cs).toFixed(2)+" ribs per unit time"}</b>` +
       `<span>Speed of sound, √R̃₁</span><b>${Math.sqrt(p.R1).toFixed(2)}</b>` +
       `<span>Front width</span><b>${fr.w.toFixed(1)} ribs</b>` +
-      `<span>Snapped shape stores</span><b>${fr.dE.toFixed(3)} more energy</b>` +
-      `<span>Which way</span><b>${fr.c > 1e-3 ? "unsnapped region grows" : "stands still"}</b>`;
-    if (x !== null && x > NR - 20) restart();   // loop: start a fresh front once this one nears the end
+      `<span>Which way</span><b>${Math.abs(fr.c) < 1e-3 ? "stands still (pull = λ₁)" : fr.c > 0 ? "unsnapping spreads (pull below λ₁)" : "snapping spreads (pull above λ₁)"}</b>`;
+    if (x !== null && (x > NR - 20 || x < 20)) restart();   // loop: start a fresh front once this one nears either end
     raf = requestAnimationFrame(tick);
   }
-  ["fr-l1","fr-z","fr-R1"].forEach(id => $(id).addEventListener("input", restart));
+  ["fr-F","fr-l1","fr-z","fr-R1"].forEach(id => $(id).addEventListener("input", restart));
   $("fr-restart").addEventListener("click", restart);
   // Animate only while the panel is on screen
   restart(); drawF();
