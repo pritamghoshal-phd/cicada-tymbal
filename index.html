@@ -159,6 +159,27 @@ figcaption{font-size:.88rem; color:var(--muted); margin-top:.6rem; line-height:1
 .act .readout{grid-template-columns:max-content minmax(0,1fr)}
 details.curious ul.params{padding-left:1.2rem; margin:0 0 1rem}
 details.curious ul.params li{margin:.25rem 0}
+.parthead{font-size:1.45rem; margin:3rem 0 .8rem; max-width:var(--measure)}
+#dr-svg, #fr-svg{display:block; width:100%; height:auto}
+#dr-svg .axis, #fr-svg .axis{stroke:var(--muted); stroke-width:1; fill:none}
+#dr-svg .grid{stroke:var(--line); stroke-width:1}
+#dr-svg .gap{fill:var(--muted); fill-opacity:.16}
+#dr-svg .gap2{fill:var(--muted); fill-opacity:.1}
+#dr-svg .lo{stroke:var(--vein); stroke-width:2.6; fill:none}
+#dr-svg .hi{stroke:var(--accent); stroke-width:2.6; fill:none}
+#dr-svg .cont{stroke-dasharray:5 4; stroke-width:1.6; opacity:.8}
+#dr-svg text, #fr-svg text{font:500 12px "Bricolage Grotesque",system-ui,sans-serif; fill:var(--muted)}
+#dr-svg text.gl{fill:var(--ink); font-weight:600}
+#fr-svg .formula{stroke:var(--vein); stroke-width:2.4; fill:none; opacity:.85}
+#fr-svg .rib{fill:var(--ink)}
+#fr-svg .rib.on{fill:var(--accent)}
+#fr-svg .lvl{stroke:var(--line); stroke-dasharray:3 3}
+@media (max-width:600px){ #dr-svg text, #fr-svg text{font-size:17px} }
+.ptable-wrap{overflow-x:auto; max-width:820px}
+.ptable{border-collapse:collapse; width:100%; font-size:1rem; margin:.25rem 0 1rem}
+.ptable th{font:600 .9rem "Bricolage Grotesque",system-ui,sans-serif; text-align:left; color:var(--muted); border-bottom:1px solid var(--line); padding:.4rem .8rem .4rem 0}
+.ptable td{border-bottom:1px solid var(--line); padding:.55rem .8rem .55rem 0; vertical-align:top}
+.ptable td:first-child, .ptable td:nth-child(2){white-space:nowrap}
 
 .abstract{max-width:var(--measure); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:1.25rem 0 .4rem}
 .abstract h2{font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; font-weight:600; color:var(--muted); margin:0 0 .6rem}
@@ -201,6 +222,7 @@ details.curious[open] summary{border-bottom:1px solid var(--line); margin-bottom
 .fig5 .cont{stroke:var(--vein); fill:none; stroke-linecap:round}
 
 .eq{overflow-x:auto; padding:.4rem 0; font-size:1.02rem}
+@media (max-width:600px){ .eq{font-size:.8rem} }
 .params{font-size:1rem; color:var(--muted)}
 
 .methods{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:1.5rem 2rem; margin-top:1.25rem}
@@ -608,6 +630,173 @@ footer p{max-width:var(--measure)}
     </div>
   </div>
 </section>
+
+<section id="physics">
+  <div class="prose">
+    <p class="kicker">Under the hood</p>
+    <h2>The physics of a snapping chain</h2>
+    <p class="lede">
+      A row of ribs joined by springs is a medium that waves travel through, a bit like a guitar string or the air in a pipe.
+      Two ideas from wave physics explain most of what the tymbal does: which vibrations can travel along it at all, and how a snap
+      spreads from rib to rib.
+    </p>
+  </div>
+
+  <h3 class="parthead">1. Which vibrations can travel: the dispersion relation</h3>
+  <div class="prose">
+    <p>
+      Shake the chain gently and ripples run along it. Every ripple has a wavelength and a pitch, and the chain is picky: for each
+      wavelength, only certain pitches can travel. Plotting allowed pitch against wavelength gives the <em>dispersion relation</em>.
+      Because the model has two coupled rows, the ribs and the body, there are two curves. Below the lower curve there is nothing at all:
+      no ripple of any wavelength can carry a pitch that low. That empty strip is the band gap, and it is why so little of the cicada's
+      song sits at low frequencies.
+    </p>
+  </div>
+  <div class="act">
+    <div class="sliders">
+      <div class="sl"><label for="dr-R1"><span>Rib-to-rib coupling, R̃₁</span><output id="dr-R1o"></output></label><input type="range" id="dr-R1" min="2" max="40" step="0.5" value="15"></div>
+      <div class="sl"><label for="dr-R2"><span>Coupling along the body, R̃₂</span><output id="dr-R2o"></output></label><input type="range" id="dr-R2" min="0" max="30" step="0.5" value="4"></div>
+      <div class="sl"><label for="dr-l1"><span>Rib stiffness, λ₁</span><output id="dr-l1o"></output></label><input type="range" id="dr-l1" min="0" max="1" step="0.01" value="0.1"></div>
+      <div class="sl"><label for="dr-l2"><span>Tymbal–body coupling, λ₂</span><output id="dr-l2o"></output></label><input type="range" id="dr-l2" min="0" max="0.8" step="0.01" value="0.3"><small>Set it to zero: the body's curve drops to zero pitch and the gap closes.</small></div>
+      <div class="sl"><label for="dr-M"><span>Resonator parameter, M</span><output id="dr-Mo"></output></label><input type="range" id="dr-M" min="0.2" max="12" step="0.1" value="6.5"></div>
+      <label class="toggle"><input type="checkbox" id="dr-cont"> Also show the long-wave approximation</label>
+      <p class="readout" id="dr-read"></p>
+    </div>
+    <div class="plot">
+      <h3>Allowed pitch for each wavelength</h3>
+      <svg id="dr-svg" viewBox="0 0 480 300" role="img" aria-label="Dispersion relation: frequency against wavenumber for the two branches of the coupled chain, with the band gap below the lower branch shaded."></svg>
+      <div class="legend"><span><i style="background:var(--vein)"></i>lower branch</span><span><i style="background:var(--accent)"></i>upper branch</span><span><i style="background:var(--muted); opacity:.35"></i>band gap</span></div>
+    </div>
+  </div>
+  <div class="prose">
+    <details class="curious">
+      <summary>For the curious: deriving the dispersion relation</summary>
+      <p>
+        Small vibrations about the resting shape (\(U = V = 0\)) obey the linearised equations, where the cubic and quadratic terms drop out.
+        Trying a wave \(U_j = U_0 e^{i(k j + \omega T)}\), \(V_j = V_0 e^{i(k j + \omega T)}\) in the discrete equations turns each
+        second difference into a factor \(-K^2\) with
+      </p>
+      <div class="eq">\[K^2 = 4\sin^2\!\frac{k}{2}\]</div>
+      <p>
+        which is \(\approx k^2\) for long waves (\(k \ll 1\)), the continuum limit used in the paper. Setting the determinant of the
+        resulting 2×2 system to zero gives
+      </p>
+      <div class="eq">\[\left(A-\omega^2+i\zeta\omega\right)\left(B-\omega^2\right)-M\lambda_2^2=0\]</div>
+      <div class="eq">\[A=R_1K^2+\lambda_1+\lambda_2+2,\qquad B=R_2K^2+M\lambda_2\]</div>
+      <p>
+        which expands to the quartic in the Supplementary Information (Eq. S18). Without damping the two branches are
+      </p>
+      <div class="eq">\[\omega_\pm^2=\tfrac12\left[A+B\pm\sqrt{(A-B)^2+4M\lambda_2^2}\right]\]</div>
+      <p>
+        The lower branch starts at \(\omega_c=\omega_-(k=0)\), which is greater than zero whenever \(\lambda_2&gt;0\). Below \(\omega_c\) no real
+        wavenumber exists, so vibrations there decay instead of travelling: that is the low-frequency band gap. With \(\lambda_2=0\) the
+        body's branch is simply \(\omega=\sqrt{R_2}\,K\), which starts at zero, and the gap closes. On the lattice, \(k\) only runs up to
+        \(\pi\) (neighbouring ribs moving in opposite directions), so both bands have a top; when the top of the lower band falls below the
+        bottom of the upper band, a second gap opens between them. Damping \(\zeta\) makes \(\omega\) complex; its imaginary part is
+        the decay rate.
+      </p>
+      <p class="params">
+        Pitches in kHz use the playground's time scale, which puts the tymbal's own band near 4–5 kHz, so they are illustrative. In the
+        resonator equation here, as on this page, \(R_2\) multiplies \(\partial^2V/\partial X^2\) directly.
+      </p>
+    </details>
+  </div>
+
+  <h3 class="parthead">2. How a snap travels: the buckling front</h3>
+  <div class="prose">
+    <p>
+      When ribs snap one after another, the boundary between snapped and unsnapped ribs runs along the chain like a falling line of
+      dominoes. For this chain, the shape and speed of that boundary can be worked out exactly. Below, the dots are a live simulation of
+      the ribs and the line is the exact formula drawn on top.
+    </p>
+    <p>
+      There is a surprise. Left to itself, the boundary always moves so that the <em>unsnapped</em> region grows. The snapped shape stores
+      a little more energy than the resting one, so given a free path the chain unsnaps, and with little damping it does so close to
+      the chain's speed of sound. A buckling wave, by contrast, has to be pushed along, by the muscle or by the first kick. That is
+      consistent with what the high-speed camera sees: a slower forward wave of buckling, then a much faster wave of unbuckling.
+    </p>
+  </div>
+  <div class="act">
+    <div class="sliders">
+      <div class="sl"><label for="fr-l1"><span>Rib stiffness, λ₁</span><output id="fr-l1o"></output></label><input type="range" id="fr-l1" min="0" max="0.24" step="0.005" value="0.1"><small>At zero, both shapes store the same energy and the front stands still.</small></div>
+      <div class="sl"><label for="fr-z"><span>Damping, ζ</span><output id="fr-zo"></output></label><input type="range" id="fr-z" min="0.05" max="1.5" step="0.01" value="0.3"><small>Less damping: a faster, sharper front.</small></div>
+      <div class="sl"><label for="fr-R1"><span>Rib-to-rib coupling, R̃₁</span><output id="fr-R1o"></output></label><input type="range" id="fr-R1" min="2" max="40" step="0.5" value="15"></div>
+      <div class="playbtns"><button class="btn" id="fr-restart" type="button">Restart</button></div>
+      <p class="readout" id="fr-read"></p>
+    </div>
+    <div class="plot">
+      <h3>Rib displacement along the chain (tymbal on its own)</h3>
+      <svg id="fr-svg" viewBox="0 0 480 240" role="img" aria-label="Displacement of each rib along the chain: unsnapped ribs on the left, snapped ribs on the right, with the boundary moving to the right as the unsnapped region grows."></svg>
+      <div class="legend"><span><i style="background:var(--ink)"></i>rib, simulated</span><span><i style="background:var(--vein)"></i>exact formula</span><span><i style="background:var(--accent)"></i>snapped</span></div>
+    </div>
+  </div>
+  <div class="prose">
+    <details class="curious">
+      <summary>For the curious: the exact front</summary>
+      <p>
+        Take the tymbal chain on its own (\(\lambda_2=0\)) and long enough that its ends don't matter. Writing the restoring force as
+        \(U(U-U_m)(U-U_b)\), with the hilltop and buckled states
+      </p>
+      <div class="eq">\[U_{m,b}=\frac{3\mp\sqrt{1-4\lambda_1}}{2}\]</div>
+      <p>a front that joins rest (\(U=0\)) to the buckled state is</p>
+      <div class="eq">\[U(X,T)=\frac{U_b}{1+e^{-(X-cT)/w}}\]</div>
+      <p>moving at speed \(c\) with width \(w\):</p>
+      <div class="eq">\[c=\frac{(2U_m-U_b)\sqrt{R_1}}{\sqrt{2\zeta^2+(2U_m-U_b)^2}},\qquad w=\frac{\sqrt{2(R_1-c^2)}}{U_b}\]</div>
+      <p>
+        It solves the continuum equation exactly. The direction is set by the energy difference between the two valleys,
+      </p>
+      <div class="eq">\[\Pi(U_b)-\Pi(0)=\frac{U_b^3\,(2U_m-U_b)}{12}\]</div>
+      <p>
+        which is positive for every \(\lambda_1&gt;0\): the buckled valley sits higher, so \(c&gt;0\) and the resting state invades. At
+        \(\lambda_1=0\) the valleys are level and \(c=0\). The speed can never exceed \(\sqrt{R_1}\), the chain's speed of sound (the
+        fastest any disturbance travels in the continuum equation), and as it approaches that limit the front gets narrower. Once \(w\) drops to about one rib, the continuum picture starts to fail and the
+        simulated front runs a few per cent slower than the formula; you can see this by turning the damping right down.
+      </p>
+      <p class="params">
+        The travelling wave in the Supplementary Information (Eq. S19) is a different front: it joins the hilltop state \(U_m\) to the
+        buckled state \(U_b\), rather than rest to buckled.
+      </p>
+    </details>
+  </div>
+
+  <h3 class="parthead">3. What the six numbers mean</h3>
+  <div class="prose">
+    <p>
+      Every slider on this page is one of six numbers that come from the real parts of the model: masses, springs and a damper. Scaling
+      them this way means one set of equations covers every species; only the numbers change.
+    </p>
+  </div>
+  <div class="ptable-wrap">
+    <table class="ptable">
+      <thead><tr><th>Number</th><th>Built from</th><th>In words</th></tr></thead>
+      <tbody>
+        <tr><td>\(\lambda_1\)</td><td>\(k_1/k\alpha_0^2\)</td><td>The rib's own bending stiffness against its truss springs. Decides whether a rib has two stable shapes (below 0.25) or one.</td></tr>
+        <tr><td>\(\tilde R_1\)</td><td>\(r_1/k\alpha_0^2\)</td><td>How strongly neighbouring ribs pull on each other; sets how fast ripples and snaps travel.</td></tr>
+        <tr><td>\(\zeta\)</td><td>\(c/m\omega_n\)</td><td>Damping: how quickly the membrane's motion dies away.</td></tr>
+        <tr><td>\(\lambda_2\)</td><td>\(k_2/k\alpha_0^2\)</td><td>How strongly the tymbal drives the body; with none, there is no band gap.</td></tr>
+        <tr><td>\(M\)</td><td>\(m/m_1\)</td><td>Rib mass against resonator mass; tunes the body's resonance.</td></tr>
+        <tr><td>\(\tilde R_2\)</td><td>\(r_2/k\alpha_0^2\)</td><td>How strongly neighbouring parts of the body pull on each other.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose">
+    <details class="curious">
+      <summary>For the curious: where the cubic force comes from</summary>
+      <p>
+        Each rib is a shallow truss: two springs of stiffness \(k\), each tilted by a small angle \(\alpha_0\), meeting at a mass \(m\) a
+        distance \(\alpha_0 w_0\) off the line between their pins. Moving the mass by \(u\) changes each spring's length by
+        \(\delta l = u(u-2\alpha_0 w_0)/2w_0\) and tilts it to \(\alpha=(\alpha_0 w_0-u)/w_0\), so the two springs push on the mass with
+      </p>
+      <div class="eq">\[2k\,\delta l\,\alpha = -k\alpha_0^3 w_0\,\left(U^3-3U^2+2U\right),\qquad U=\frac{u}{\alpha_0 w_0}\]</div>
+      <p>
+        The cubic has three zeros: rest (\(U=0\)), the hilltop (\(U=1\)) and the fully flipped truss (\(U=2\)). Adding the rib's own spring
+        \(k_1\) and the coupling to the body \(k_2\) adds \((\lambda_1+\lambda_2)U\), and measuring time in units of
+        \(1/\omega_n\), with \(\omega_n=\alpha_0\sqrt{k/m}\), gives the tymbal equation above.
+      </p>
+    </details>
+  </div>
+</section>
+
 
 <section id="why">
   <div class="prose">
@@ -1228,6 +1417,133 @@ footer p{max-width:var(--measure)}
   $("ac-go").addEventListener("click", () => { anim = performance.now(); kick(); });
   $("ac-reset").addEventListener("click", () => { anim = null; $("ac-F").value = 0; U = 0; kick(); });
   draw();
+})();
+</script>
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const NS = "http://www.w3.org/2000/svg";
+  const mk = (svg, tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
+  const TAU = 0.25/4500;                      // same time scale as the playground
+  const kHz = w => w/(2*Math.PI*TAU)/1000;
+
+  /* ---------- 1. Dispersion relation of the coupled chain ---------- */
+  const D = $("dr-svg"), DX0 = 52, DX1 = 466, DY0 = 12, DY1 = 262;
+  mk(D, "path", {d:`M${DX0},${DY0} V${DY1} H${DX1}`, class:"axis"});
+  const gapR = mk(D, "rect", {class:"gap", x:DX0, width:DX1-DX0});
+  const gap2R = mk(D, "rect", {class:"gap2", x:DX0, width:DX1-DX0});
+  const gapT = mk(D, "text", {class:"gl", x:DX0+10});
+  const yTicks = mk(D, "g", {});
+  const loC = mk(D, "path", {class:"lo cont"}), hiC = mk(D, "path", {class:"hi cont"});
+  const loP = mk(D, "path", {class:"lo"}), hiP = mk(D, "path", {class:"hi"});
+  mk(D, "text", {x:DX0, y:DY1+20}).textContent = "long waves";
+  mk(D, "text", {x:DX1, y:DY1+20, "text-anchor":"end"}).textContent = "shortest waves (k = π)";
+  mk(D, "text", {x:0, y:0, transform:`translate(14 ${(DY0+DY1)/2}) rotate(-90)`, "text-anchor":"middle"}).textContent = "pitch, ω";
+  const branches = (K2, p) => {
+    const A = p.R1*K2 + p.l1 + p.l2 + 2, B = p.R2*K2 + p.M*p.l2, r = Math.sqrt((A-B)**2 + 4*p.M*p.l2*p.l2);
+    return [Math.sqrt(Math.max(0, (A+B-r)/2)), Math.sqrt((A+B+r)/2)];
+  };
+  function drawDR(){
+    const p = {R1:+$("dr-R1").value, R2:+$("dr-R2").value, l1:+$("dr-l1").value, l2:+$("dr-l2").value, M:+$("dr-M").value};
+    ["R1","R2","l1","l2","M"].forEach(k => $(`dr-${k}o`).textContent = (+$(`dr-${k}`).value).toFixed(k==="l1"||k==="l2"?2:1));
+    const n = 120, lat = [], con = [];
+    for (let i=0;i<=n;i++){ const k = Math.PI*i/n; lat.push(branches(4*Math.sin(k/2)**2, p)); con.push(branches(k*k, p)); }
+    const wmax = Math.max(...lat.map(b=>b[1])) * 1.08;
+    const xs = i => DX0 + (DX1-DX0)*i/n, ys = w => DY1 - (DY1-DY0)*Math.min(w, wmax*1.2)/wmax;
+    const path = (arr, j) => { let d = ""; arr.forEach((b,i)=>{ if (b[j] <= wmax*1.2) d += (d?"L":"M")+xs(i).toFixed(1)+","+ys(b[j]).toFixed(1); }); return d; };
+    loP.setAttribute("d", path(lat,0)); hiP.setAttribute("d", path(lat,1));
+    const showC = $("dr-cont").checked;
+    loC.setAttribute("d", showC ? path(con,0) : ""); hiC.setAttribute("d", showC ? path(con,1) : "");
+    const wc = lat[0][0], loTop = Math.max(...lat.map(b=>b[0])), hiBot = Math.min(...lat.map(b=>b[1])), hiTop = Math.max(...lat.map(b=>b[1]));
+    gapR.setAttribute("y", ys(wc)); gapR.setAttribute("height", Math.max(0, DY1-ys(wc)));
+    gapT.setAttribute("y", Math.min(DY1-8, (ys(wc)+DY1)/2+4)); gapT.textContent = wc > 0.02*wmax ? "band gap: nothing travels" : "";
+    const second = hiBot > loTop + 1e-6;
+    gap2R.setAttribute("y", ys(hiBot)); gap2R.setAttribute("height", second ? ys(loTop)-ys(hiBot) : 0);
+    yTicks.replaceChildren();
+    const step = wmax > 12 ? 4 : wmax > 6 ? 2 : 1;
+    for (let w=0; w<=wmax; w+=step){ mk(yTicks,"line",{x1:DX0-4,x2:DX0,y1:ys(w),y2:ys(w),class:"axis"}); mk(yTicks,"text",{x:DX0-8,y:ys(w)+4,"text-anchor":"end"}).textContent = w; }
+    const f = w => `${w.toFixed(2)} <span>(≈ ${kHz(w).toFixed(1)} kHz)</span>`;
+    $("dr-read").innerHTML =
+      `<span>Band gap below</span><b>${wc > 1e-3 ? f(wc) : "none"}</b>` +
+      `<span>Lower band</span><b>${wc.toFixed(2)}–${loTop.toFixed(2)}</b>` +
+      `<span>Upper band</span><b>${hiBot.toFixed(2)}–${hiTop.toFixed(2)}</b>` +
+      `<span>Gap between bands</span><b>${second ? loTop.toFixed(2)+"–"+hiBot.toFixed(2) : "none (bands overlap)"}</b>`;
+  }
+  ["dr-R1","dr-R2","dr-l1","dr-l2","dr-M","dr-cont"].forEach(id => $(id).addEventListener("input", drawDR));
+  drawDR();
+
+  /* ---------- 2. Buckling front: discrete chain vs exact formula ---------- */
+  const F = $("fr-svg"), FX0 = 20, FX1 = 470, FY0 = 18, FY1 = 200, NR = 150;
+  mk(F, "path", {d:`M${FX0},${FY1} H${FX1}`, class:"axis"});
+  mk(F, "text", {x:FX0, y:FY1+20}).textContent = "ribs →";
+  const lvlB = mk(F, "line", {x1:FX0, x2:FX1, class:"lvl"});
+  mk(F, "text", {x:FX0, y:FY1-6}).textContent = "rest";
+  const lvlT = mk(F, "text", {x:FX0});
+  const formula = mk(F, "path", {class:"formula"});
+  const dots = []; for (let j=0;j<NR;j++) dots.push(mk(F, "circle", {r:2.6, class:"rib"}));
+  const front = p => {
+    const s = Math.sqrt(1-4*p.l1), a = (3-s)/2, b = (3+s)/2, d = 2*a-b;
+    const c = d*Math.sqrt(p.R1)/Math.sqrt(2*p.z*p.z + d*d), w = Math.sqrt(2*(p.R1-c*c))/b;
+    return {b, c, w, dE: b**3*d/12};
+  };
+  let st = null, raf = null;
+  function restart(){
+    const p = {l1:+$("fr-l1").value, z:+$("fr-z").value, R1:+$("fr-R1").value};
+    ["l1","z","R1"].forEach(k => $(`fr-${k}o`).textContent = (+$(`fr-${k}`).value).toFixed(k==="R1"?1:2));
+    const fr = front(p), x0 = 25, U = new Float64Array(NR), V = new Float64Array(NR);
+    for (let j=0;j<NR;j++){ const e = Math.exp(-(j-x0)/fr.w); U[j] = fr.b/(1+e); V[j] = -fr.c*U[j]*(1-U[j]/fr.b)/fr.w; }
+    st = {p, fr, x0, U, V, T:0, track:[]};
+  }
+  const ysF = (u, b) => FY1 - (FY1-FY0)*u/(b*1.08);
+  function drawF(){
+    const {U, fr, x0, T} = st, xs = j => FX0 + (FX1-FX0)*j/(NR-1);
+    lvlB.setAttribute("y1", ysF(fr.b, fr.b)); lvlB.setAttribute("y2", ysF(fr.b, fr.b));
+    lvlT.setAttribute("y", ysF(fr.b, fr.b)-6); lvlT.textContent = "snapped";
+    let d = ""; for (let i=0;i<=300;i++){ const x = (NR-1)*i/300; d += (i?"L":"M")+xs(x).toFixed(1)+","+ysF(fr.b/(1+Math.exp(-(x-x0-fr.c*T)/fr.w)), fr.b).toFixed(1); }
+    formula.setAttribute("d", d);
+    dots.forEach((c,j)=>{ c.setAttribute("cx", xs(j)); c.setAttribute("cy", ysF(U[j], fr.b)); c.classList.toggle("on", U[j] > fr.b/2); });
+  }
+  function frontPos(){                       // where the simulated chain crosses half height
+    const {U, fr} = st; for (let j=1;j<NR;j++) if (U[j] > fr.b/2 && U[j-1] <= fr.b/2) return j-1 + (fr.b/2-U[j-1])/(U[j]-U[j-1]);
+    return null;
+  }
+  function tick(){
+    const {p, U, V} = st, k = p.l1 + 2, dt = 0.01;
+    for (let n=0;n<5;n++){
+      for (let j=0;j<NR;j++){
+        const ul = U[j>0?j-1:0], ur = U[j<NR-1?j+1:NR-1], u = U[j];
+        V[j] += (-p.z*V[j] - (u*u*u - 3*u*u + k*u) + p.R1*(ul - 2*u + ur))*dt;
+      }
+      for (let j=0;j<NR;j++) U[j] += V[j]*dt;
+      st.T += dt;
+    }
+    const x = frontPos(); if (x !== null) st.track.push([st.T, x]);
+    if (st.track.length > 400) st.track.shift();
+    drawF();
+    let cs = null;
+    if (st.track.length > 30){
+      const t = st.track, m = t.length, sx = t.reduce((a,v)=>a+v[0],0)/m, sy = t.reduce((a,v)=>a+v[1],0)/m;
+      cs = t.reduce((a,v)=>a+(v[0]-sx)*(v[1]-sy),0) / t.reduce((a,v)=>a+(v[0]-sx)**2,0);
+    }
+    const fr = st.fr;
+    $("fr-read").innerHTML =
+      `<span>Front speed, formula</span><b>${fr.c.toFixed(2)} ribs per unit time</b>` +
+      `<span>Front speed, simulated</span><b>${cs === null ? "…" : cs.toFixed(2)+" ribs per unit time"}</b>` +
+      `<span>Speed of sound, √R̃₁</span><b>${Math.sqrt(p.R1).toFixed(2)}</b>` +
+      `<span>Front width</span><b>${fr.w.toFixed(1)} ribs</b>` +
+      `<span>Snapped shape stores</span><b>${fr.dE.toFixed(3)} more energy</b>` +
+      `<span>Which way</span><b>${fr.c > 1e-3 ? "unsnapped region grows" : "stands still"}</b>`;
+    if (x !== null && x > NR - 20) restart();   // loop: start a fresh front once this one nears the end
+    raf = requestAnimationFrame(tick);
+  }
+  ["fr-l1","fr-z","fr-R1"].forEach(id => $(id).addEventListener("input", restart));
+  $("fr-restart").addEventListener("click", restart);
+  // Animate only while the panel is on screen
+  restart(); drawF();
+  new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting && !raf) raf = requestAnimationFrame(tick);
+    if (!e.isIntersecting && raf){ cancelAnimationFrame(raf); raf = null; }
+  })).observe(F.closest(".act"));
 })();
 </script>
 </body>
